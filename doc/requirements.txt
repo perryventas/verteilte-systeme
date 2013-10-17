@@ -4,6 +4,11 @@ Requirements:
 * Tibco Business Works
   > Tibco Designer
 
+Documentation:
+
+* docs.tibco.com 
+* youtube
+
 tibcommunity.com   -> Downloads -> Business Works
 
 cloudbus.tibco.com -> Self Registration
