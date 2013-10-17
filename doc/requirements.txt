@@ -1,0 +1,9 @@
+Requirements:
+
+* EMS
+* Tibco Business Works
+  > Tibco Designer
+
+tibcommunity.com   -> Downloads -> Business Works
+
+cloudbus.tibco.com -> Self Registration
