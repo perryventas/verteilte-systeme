@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
+import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.connection.Connection;
 
 public class EMSConnection implements Connection {
@@ -70,8 +71,7 @@ public class EMSConnection implements Connection {
 	
 	@Override
 	public Serializable receive() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		 return (Serializable) new EchoPDU();
 	}
 
 	@Override

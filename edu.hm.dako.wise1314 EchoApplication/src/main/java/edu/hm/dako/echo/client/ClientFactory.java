@@ -39,6 +39,12 @@ public final class ClientFactory {
                             param.getNumberOfMessages(), param.getClientThinkTime(),
                             sharedData, getDecoratedFactory(new EMSConnectionFactory()));
                     
+                case EMSMultiThreaded:
+                    return new ConnectionReusingClient(param.getRemoteServerPort(),
+                            param.getRemoteServerAddress(), numberOfClient, param.getMessageLength(),
+                            param.getNumberOfMessages(), param.getClientThinkTime(),
+                            sharedData, getDecoratedFactory(new EMSConnectionFactory()));
+                    
                     
                 default:
                     throw new RuntimeException("Unknown type: " + param.getImplementationType());
