@@ -7,12 +7,14 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
+import javax.jms.QueueReceiver;
 import javax.jms.QueueSession;
 import javax.jms.Session;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
 import edu.hm.dako.echo.common.EchoPDU;
@@ -22,14 +24,19 @@ public class EMSConnection implements Connection {
 
 	private static Log log = LogFactory.getLog(EMSConnection.class);
 	
-	private QueueConnection connection = null;
-	private QueueSession 	session	   = null;
-	private Queue			queue 	   = null;
-	private MessageProducer producer   = null;
+	private QueueConnection connection 		   = null;
+	private QueueSession 	session	  		   = null;
+	private Queue			requestQueue 	   = null;
+	private MessageProducer producer   		   = null;
 	
-	private String userName   = "dev";
-	private String password   = "dev";
-	private String queueName  = "dev.request";
+	private QueueReceiver 	receiver 		   = null;
+	private Queue		    responseQueue	   = null;
+	
+	private String userName  				   = "dev";
+	private String password                    = "dev";
+	
+	private String requestQueueName            = "dev.request";
+	private String responseQueueName 		   = "dev.response";
 	
 	public EMSConnection( TibjmsQueueConnectionFactory factory )
 	{
@@ -55,23 +62,34 @@ public class EMSConnection implements Connection {
 		}
 		
 		try {
-			queue = session.createQueue( queueName );
+			requestQueue  = session.createQueue( requestQueueName );
+			responseQueue = session.createQueue( responseQueueName );
 		} catch (JMSException e) {
-			log.error("Error creating queue");
+			log.error("Error creating queues");
 			return;
 		}
 		
 		try {
-			producer = session.createProducer(queue);
+			producer = session.createProducer(requestQueue);
+			receiver = session.createReceiver(responseQueue);
 		} catch (JMSException e) {
-			log.error("Error creating producer");
+			log.error("Error creating producer/receiver");
 		}
 		
 	}
 	
 	@Override
 	public Serializable receive() throws Exception {
-		 return (Serializable) new EchoPDU();
+		
+		/*
+		 javax.jms.Message message = receiver.receive();
+         
+		 if (message == null)
+	         return null;
+	     
+	     return (Serializable) message;
+	     */
+		return new EchoPDU();
 	}
 
 	@Override
@@ -82,6 +100,8 @@ public class EMSConnection implements Connection {
 
 	@Override
 	public void close() throws Exception {
+		this.producer.close();
+		this.receiver.close();
 		this.connection.close();
 	}
 
