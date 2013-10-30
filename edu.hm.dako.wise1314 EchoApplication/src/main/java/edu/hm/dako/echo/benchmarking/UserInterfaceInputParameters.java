@@ -65,6 +65,7 @@ public class UserInterfaceInputParameters {
             
             case EMSSingleThreaded:
             	returnString = "Single-threaded EMS";
+            	break;
             
             default:
                 break;
