@@ -4,6 +4,8 @@ import edu.hm.dako.echo.benchmarking.UserInterfaceInputParameters;
 import edu.hm.dako.echo.common.SharedClientStatistics;
 import edu.hm.dako.echo.connection.ConnectionFactory;
 import edu.hm.dako.echo.connection.DecoratingConnectionFactory;
+import edu.hm.dako.echo.connection.ems.EMSConnection;
+import edu.hm.dako.echo.connection.ems.EMSConnectionFactory;
 import edu.hm.dako.echo.connection.tcp.TcpConnectionFactory;
 
 /**
@@ -24,11 +26,20 @@ public final class ClientFactory {
                             param.getRemoteServerAddress(), numberOfClient, param.getMessageLength(),
                             param.getNumberOfMessages(), param.getClientThinkTime(),
                             sharedData, getDecoratedFactory(new TcpConnectionFactory()));
+                    
                 case TCPMultiThreaded:
                     return new ConnectionReusingClient(param.getRemoteServerPort(),
                             param.getRemoteServerAddress(), numberOfClient, param.getMessageLength(),
                             param.getNumberOfMessages(), param.getClientThinkTime(),
                             sharedData, getDecoratedFactory(new TcpConnectionFactory()));
+                
+                case EMSSingleThreaded:
+                    return new NewConnectionClient(param.getRemoteServerPort(),
+                            param.getRemoteServerAddress(), numberOfClient, param.getMessageLength(),
+                            param.getNumberOfMessages(), param.getClientThinkTime(),
+                            sharedData, getDecoratedFactory(new EMSConnectionFactory()));
+                    
+                    
                 default:
                     throw new RuntimeException("Unknown type: " + param.getImplementationType());
             }

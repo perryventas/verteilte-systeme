@@ -27,6 +27,7 @@ public class UserInterfaceInputParameters {
     public enum ImplementationType {
         TCPSingleThreaded,
         TCPMultiThreaded,
+        EMSSingleThreaded
     }
 
     /**
@@ -57,9 +58,14 @@ public class UserInterfaceInputParameters {
             case TCPSingleThreaded:
                 returnString = "Single-threaded TCP";
                 break;
+                
             case TCPMultiThreaded:
                 returnString = "Multi-threaded TCP";
                 break;
+            
+            case EMSSingleThreaded:
+            	returnString = "Single-threaded EMS";
+            
             default:
                 break;
         }
