@@ -31,12 +31,14 @@ import java.awt.event.WindowEvent;
 public class BenchmarkingClientGui extends JPanel
         implements BenchmarkingClientUserInterface, ActionListener {
 
-    public static final String SINGLE_THREADED_TCP = "SingleThreaded-TCP";
-    public static final String MULTI_THREADED_TCP = "MultiThreaded-TCP";
+	public static final String SINGLE_THREADED_TCP = "SingleThreaded-TCP";
+	public static final String MULTI_THREADED_TCP = "MultiThreaded-TCP";
+	public static final String EMS_SINGLE_THREADED_TCP = "EMSSingleThreaded-TCP";
+	public static final String EMS_MULTI_THREADED_TCP = "EMSMultiThreaded-TCP";
     
-    private long timeCounter = 0; // Zeitzaehler fuer Testlaufzeit
+    private long timeCounter = 0; // Zeitzaehler fuer Testlaufzeit 
 
-    private static JFrame f; // Frame fuer Echo-Anwendungs-GUI
+    private static JFrame f; // Frame fuer Echo-Anwendungs-GUI 
     private static JPanel panel;
 
     /**
@@ -87,7 +89,9 @@ public class BenchmarkingClientGui extends JPanel
          */
         String[] optionStrings = {
                 SINGLE_THREADED_TCP,
-                MULTI_THREADED_TCP};
+                MULTI_THREADED_TCP,
+                EMS_SINGLE_THREADED_TCP,
+                EMS_MULTI_THREADED_TCP};
         optionList1 = new JComboBox(optionStrings);
 
         String[] optionStrings1 = {
@@ -332,6 +336,10 @@ public class BenchmarkingClientGui extends JPanel
             iParm.setImplementationType(ImplementationType.TCPSingleThreaded);
         if (item1.equals(MULTI_THREADED_TCP))
             iParm.setImplementationType(ImplementationType.TCPMultiThreaded);
+        if (item1.equals(EMS_SINGLE_THREADED_TCP))
+            iParm.setImplementationType(ImplementationType.EMSSingleThreaded);
+        if (item1.equals(EMS_MULTI_THREADED_TCP))
+            iParm.setImplementationType(ImplementationType.EMSMultiThreaded);
         
         // Eingegebenen Messungstyp auslesen
 
