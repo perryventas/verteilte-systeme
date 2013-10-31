@@ -34,6 +34,9 @@ public final class ServerFactory {
             case TCPMultiThreaded:
                 return new DefaultEchoServerImpl(Executors.newCachedThreadPool(), getDecoratedServerSocket(
                         new TcpServerSocket(DEFAULT_SERVER_PORT)), true);
+                
+            case EMSSingleThreaded:
+                return new EMSEchoServerImpl();
        
              // Weitere Implementierungen hier einbauen 
             
@@ -59,7 +62,7 @@ public final class ServerFactory {
          * Im ImplementationType der naechsten Anweisungen muss der Server, 
     	 * der gestartet werden soll, angegeben werden, hier nur TCPSingleThreaded und TCPMultiThreaded implementiert
          */   	
-        getServer(UserInterfaceInputParameters.ImplementationType.TCPSingleThreaded).start();
+        getServer(UserInterfaceInputParameters.ImplementationType.EMSSingleThreaded).start();
     }
 
     private static class DecoratingServerSocket implements ServerSocket {

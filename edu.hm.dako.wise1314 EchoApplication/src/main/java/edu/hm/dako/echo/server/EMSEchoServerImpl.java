@@ -1,6 +1,7 @@
 package edu.hm.dako.echo.server;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
@@ -18,8 +19,6 @@ import org.apache.log4j.PropertyConfigurator;
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
 import edu.hm.dako.echo.common.EchoPDU;
-import edu.hm.dako.echo.connection.Connection;
-import edu.hm.dako.echo.connection.ems.EMSConnection;
 
 public class EMSEchoServerImpl implements EchoServer {
 	
@@ -54,8 +53,10 @@ public class EMSEchoServerImpl implements EchoServer {
 			try {
 				this.connection = factory.createQueueConnection( userName, password );
 				this.session    = connection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
-				requestQueue    = session.createQueue( requestQueueName );
-				responseQueue   = session.createQueue( responseQueueName );		
+				this.requestQueue    = session.createQueue( requestQueueName );
+				this.responseQueue   = session.createQueue( responseQueueName );	
+				this.producer = session.createProducer(requestQueue);
+				this.receiver = session.createReceiver(responseQueue);
 			} catch( Exception e ) {
 				return false;
 			}
@@ -71,15 +72,16 @@ public class EMSEchoServerImpl implements EchoServer {
         this.connectToEms();
         
         if (this.isConnected) {
-        	new EchoWorker(this.connection, this.session, this.receiver, this.producer);
+        	new EchoWorker(this.connection, this.session, this.receiver, this.producer).run();
         }
 		
 	}
 
 	@Override
 	public void stop() throws Exception {
-		// TODO Auto-generated method stub
-		
+		System.out.println("EchoServer beendet sich");
+        Thread.currentThread().interrupt();
+        connection.close();
 	}
 	
 	
