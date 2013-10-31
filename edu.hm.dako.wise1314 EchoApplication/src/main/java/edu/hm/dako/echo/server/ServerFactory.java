@@ -59,7 +59,7 @@ public final class ServerFactory {
          * Im ImplementationType der naechsten Anweisungen muss der Server, 
     	 * der gestartet werden soll, angegeben werden, hier nur TCPSingleThreaded und TCPMultiThreaded implementiert
          */   	
-        getServer(UserInterfaceInputParameters.ImplementationType.TCPMultiThreaded).start();
+        getServer(UserInterfaceInputParameters.ImplementationType.TCPSingleThreaded).start();
     }
 
     private static class DecoratingServerSocket implements ServerSocket {
