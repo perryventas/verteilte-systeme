@@ -2,6 +2,7 @@ package edu.hm.dako.echo.connection.ems;
 
 import java.io.Serializable;
 
+import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
@@ -20,7 +21,7 @@ import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.connection.Connection;
 
-public class EMSConnection implements Connection {
+public class EMSConnection implements Connection, ExceptionListener {
 
 	private static Log log = LogFactory.getLog(EMSConnection.class);
 	
@@ -52,6 +53,17 @@ public class EMSConnection implements Connection {
 			log.info(Thread.currentThread().getName() + 
 					": Verbindung mit neuem Client aufgebaut ueber EMS " +
 	                this.connection.toString());
+			try {
+				connection.setExceptionListener(this);
+			} catch (JMSException e) {
+				log.error("Error setting exception listener.");
+			}
+			
+			try {
+				this.connection.start();
+			} catch (JMSException e) {
+				log.error("Error starting connection.");
+			}
 		}
 		
 		try {
@@ -79,10 +91,16 @@ public class EMSConnection implements Connection {
 	}
 	
 	@Override
+	public void onException(JMSException e)
+	{
+		log.error(e.getMessage());
+	}
+	
+	@Override
 	public Serializable receive() throws Exception {
 		
 		 /* blocking */
-		 Message message = receiver.receive();
+		 Message message = this.receiver.receive();
 		 
 		 if (message == null)
 	         return null;

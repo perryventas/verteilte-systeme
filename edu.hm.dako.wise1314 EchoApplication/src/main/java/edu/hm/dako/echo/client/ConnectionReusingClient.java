@@ -61,6 +61,7 @@ public class ConnectionReusingClient extends AbstractClient {
         sharedData.incrSentMsgCounter(clientNumber);
         connection.send(constructEchoPDU(i));
         EchoPDU receivedPdu = (EchoPDU) connection.receive();
+        
         long rtt = System.nanoTime() - rttStartTime;
         postReceive(i, receivedPdu, rtt);
         Thread.sleep(clientThinkTime);
