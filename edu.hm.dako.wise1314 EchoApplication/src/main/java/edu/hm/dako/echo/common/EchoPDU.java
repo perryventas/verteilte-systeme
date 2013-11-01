@@ -20,12 +20,14 @@ public class EchoPDU implements Serializable {
      								 // ob sich der Client nach der Nachricht beendet
     private long serverTime; 		 // Zeit in Nanosekunden, die der Server benoetigt. Diese
     								 // Zeit wird vom Server vor dem Absenden der Response eingetragen.
+    private long clientTime;
 
     public EchoPDU() {
         clientName = null;
         serverThreadName = null;
         message = null;
         serverTime = 0;
+        clientTime = 0;
         lastRequest = false;
     }
 
@@ -35,11 +37,20 @@ public class EchoPDU implements Serializable {
         echoPDU.setClientName(receivedPdu.getClientName());
         echoPDU.setMessage(receivedPdu.getMessage());
         echoPDU.setServerTime(System.nanoTime() - startTime);
+        echoPDU.setClientTime(receivedPdu.getClientTime());
         return echoPDU;
     }
 
     public void setClientName(String name) {
         this.clientName = name;
+    }
+
+    public long getClientTime() {
+        return clientTime;
+    }
+
+    public void setClientTime(long clientTime) {
+        this.clientTime = clientTime;
     }
 
     public void setServerThreadName(String name) {
