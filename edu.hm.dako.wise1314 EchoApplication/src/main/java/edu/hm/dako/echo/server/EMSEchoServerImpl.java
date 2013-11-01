@@ -3,6 +3,7 @@ package edu.hm.dako.echo.server;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
@@ -39,7 +40,7 @@ public class EMSEchoServerImpl implements EchoServer {
 	private String password                    = "dev";
 	
 	private String requestQueueName            = "dev.request";
-	private String responseQueueName 		   = "dev.response";
+	private String responseQueueName		   = "dev.response";
 	
 	
 	
@@ -55,9 +56,11 @@ public class EMSEchoServerImpl implements EchoServer {
 				this.session    = connection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
 				this.requestQueue    = session.createQueue( requestQueueName );
 				this.responseQueue   = session.createQueue( responseQueueName );	
-				this.producer = session.createProducer(requestQueue);
-				this.receiver = session.createReceiver(responseQueue);
+				this.producer = session.createProducer(responseQueue);
+				this.receiver = session.createReceiver(requestQueue);
+				this.connection.start();
 			} catch( Exception e ) {
+				System.out.println("Error");
 				return false;
 			}
 			this.isConnected = true;
@@ -69,9 +72,11 @@ public class EMSEchoServerImpl implements EchoServer {
 	public void start() {
 		PropertyConfigurator.configureAndWatch("log4j.server.properties", 60 * 1000);
         System.out.println("Echoserver wartet auf Clients...");
+        
         this.connectToEms();
         
         if (this.isConnected) {
+        	
         	new EchoWorker(this.connection, this.session, this.receiver, this.producer).run();
         }
 		
@@ -122,10 +127,14 @@ public class EMSEchoServerImpl implements EchoServer {
 
         private void echo() throws Exception {
            
-        	javax.jms.Message message = rec.receive();
-            
+        	System.out.println("before queue receive");
+        	Message message = rec.receive();
+        	System.out.println("after queue receive");
+        	
         	if (message == null)
                 return;
+        	
+        	System.out.println("received object message.");
         	
         	ObjectMessage objMsg = (ObjectMessage) message;
             EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();

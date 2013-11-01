@@ -3,6 +3,7 @@ package edu.hm.dako.echo.connection.ems;
 import java.io.Serializable;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
@@ -14,7 +15,6 @@ import javax.jms.Session;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
 import edu.hm.dako.echo.common.EchoPDU;
@@ -81,15 +81,16 @@ public class EMSConnection implements Connection {
 	@Override
 	public Serializable receive() throws Exception {
 		
-		/*
-		 javax.jms.Message message = receiver.receive();
-         
+		 /* blocking */
+		 Message message = receiver.receive();
+		 
 		 if (message == null)
 	         return null;
-	     
-	     return (Serializable) message;
-	     */
-		return new EchoPDU();
+         
+		 ObjectMessage objMsg = (ObjectMessage) message;
+		 EchoPDU pdu = (EchoPDU) objMsg.getObject();
+		   
+	     return pdu;
 	}
 
 	@Override
