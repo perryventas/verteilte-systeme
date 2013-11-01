@@ -24,5 +24,6 @@ tmp/**/*
 #Mac OS
 .DS_Store
 /bin
-/logs
+*.log
+/edu.hm.dako.wise1314 EchoApplication/logs/
 edu.hm.dako.wise1314 EchoApplication/Benchmarking-EchoApp-Protokolldatei
