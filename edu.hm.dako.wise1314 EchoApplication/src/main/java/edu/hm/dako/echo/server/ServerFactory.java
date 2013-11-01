@@ -31,10 +31,12 @@ public final class ServerFactory {
             case TCPSingleThreaded:
                 return new DefaultEchoServerImpl(Executors.newSingleThreadExecutor(), getDecoratedServerSocket(
                         new TcpServerSocket(DEFAULT_SERVER_PORT)), false);
+                
             case TCPMultiThreaded:
                 return new DefaultEchoServerImpl(Executors.newCachedThreadPool(), getDecoratedServerSocket(
                         new TcpServerSocket(DEFAULT_SERVER_PORT)), true);
                 
+            /* Einfacher EMS Single-Threaded (1 queue) server. */
             case EMSSingleThreaded:
                 return new EMSEchoServerImpl();
        
