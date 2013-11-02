@@ -6,12 +6,11 @@ import edu.hm.dako.echo.connection.LoggingConnectionDecorator;
 import edu.hm.dako.echo.connection.ServerSocket;
 import edu.hm.dako.echo.connection.tcp.TcpServerSocket;
 
-
 import java.util.concurrent.Executors;
 
 /**
- * Uebernimmt die Konfiguration und Erzeugung bestimmter Server-Typen.
- * Siehe {@link edu.hm.dako.echo.benchmarking.UserInterfaceInputParameters.ImplementationType}
+ * Uebernimmt die Konfiguration und Erzeugung bestimmter Server-Typen. Siehe
+ * {@link edu.hm.dako.echo.benchmarking.UserInterfaceInputParameters.ImplementationType}
  * Dies beinhaltet Art des Servers und Konfiguration dessen Thread-Pool.
  */
 public final class ServerFactory {
@@ -24,24 +23,23 @@ public final class ServerFactory {
 
     public static EchoServer getServer(UserInterfaceInputParameters.ImplementationType type)
             throws Exception {
-    	
+
         System.out.println("Echoserver " + type.toString() + " wird gestartet");
-        
+
         switch (type) {
             case TCPSingleThreaded:
                 return new DefaultEchoServerImpl(Executors.newSingleThreadExecutor(), getDecoratedServerSocket(
                         new TcpServerSocket(DEFAULT_SERVER_PORT)), false);
-                
+
             case TCPMultiThreaded:
                 return new DefaultEchoServerImpl(Executors.newCachedThreadPool(), getDecoratedServerSocket(
                         new TcpServerSocket(DEFAULT_SERVER_PORT)), true);
-                
+
             /* Einfacher EMS Single-Threaded (1 queue) server. */
             case EMSSingleThreaded:
                 return new EMSEchoServerImpl();
-       
+
              // Weitere Implementierungen hier einbauen 
-            
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
@@ -52,18 +50,18 @@ public final class ServerFactory {
     }
 
     /**
-     * Startet den ausgewaehlten Server.
-     * Muss aufgerufen werden, bevor ein Test ueber die GUI gestartet werden kann.
+     * Startet den ausgewaehlten Server. Muss aufgerufen werden, bevor ein Test
+     * ueber die GUI gestartet werden kann.
      *
      * @param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
 
-    	/* Hinweis:
+        /* Hinweis:
          * Im ImplementationType der naechsten Anweisungen muss der Server, 
-    	 * der gestartet werden soll, angegeben werden, hier nur TCPSingleThreaded und TCPMultiThreaded implementiert
-         */   	
+         * der gestartet werden soll, angegeben werden, hier nur TCPSingleThreaded und TCPMultiThreaded implementiert
+         */
         getServer(UserInterfaceInputParameters.ImplementationType.EMSSingleThreaded).start();
     }
 

@@ -1,6 +1,7 @@
 package edu.hm.dako.echo.server;
 
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
+import com.tibco.tibjms.TibjmsTopicConnectionFactory;
 import edu.hm.dako.echo.common.EchoPDU;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -11,7 +12,9 @@ import javax.jms.QueueConnection;
 import javax.jms.QueueReceiver;
 import javax.jms.QueueSession;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.jms.TopicConnection;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 import org.apache.commons.logging.Log;
@@ -40,6 +43,7 @@ public class EMSEchoServerImpl implements EchoServer {
     private final String responseQueueName = "dev.response";
 
     /* Topic part. */
+    private TopicConnection tConnection = null;
     private TopicSession tSession = null;
     private TopicPublisher publisher = null;
     private Topic dbtatopic = null;
@@ -49,20 +53,23 @@ public class EMSEchoServerImpl implements EchoServer {
 
         String serverUrl = "tcp://moguai.org:7222";
 
-        TibjmsQueueConnectionFactory factory = new TibjmsQueueConnectionFactory(serverUrl);
+        TibjmsQueueConnectionFactory queueFactory = 
+                new TibjmsQueueConnectionFactory(serverUrl);
+        
+        TibjmsTopicConnectionFactory topicFactory =
+                new TibjmsTopicConnectionFactory(serverUrl);
 
         while (!isConnected) {
             try {
-                this.connection = factory.createQueueConnection(userName, password);
+                this.connection = queueFactory.createQueueConnection(userName, password);
                 this.session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
                 this.requestQueue = session.createQueue(requestQueueName);
                 this.responseQueue = session.createQueue(responseQueueName);
 
-                /*
-                this.tSession = connection.create
-                this.dbtatopic = session.createTopic(dbTaTopicName);
-                this.publisher = session.createPublishjer(dbtatopic);
-                */
+                this.tConnection = topicFactory.createTopicConnection(userName, password);
+                this.tSession = tConnection.createTopicSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+                this.dbtatopic = tSession.createTopic(dbTaTopicName);
+                this.publisher = tSession.createPublisher(dbtatopic);
                 
                 this.producer = session.createProducer(responseQueue);
                 this.receiver = session.createReceiver(requestQueue);
@@ -79,11 +86,16 @@ public class EMSEchoServerImpl implements EchoServer {
     @Override
     public void start() {
         PropertyConfigurator.configureAndWatch("log4j.server.properties", 60 * 1000);
-        System.out.println("Echoserver wartet auf Clients...");
+        System.out.println("EMS-Echo-Server wartet auf requests...");
 
         this.connectToEms();
         if (this.isConnected) {
-            new EchoWorker(this.connection, this.session, this.receiver, this.producer).run();
+            new EchoWorker(this.connection, 
+                           this.session, 
+                           this.receiver, 
+                           this.producer, 
+                           this.publisher,
+                           this.tSession).run();
         }
 
     }
@@ -101,6 +113,8 @@ public class EMSEchoServerImpl implements EchoServer {
         private final QueueSession sess;
         private final QueueReceiver rec;
         private final MessageProducer prod;
+        private final TopicPublisher pub;
+        private final TopicSession tSession;
 
         private boolean finished = false;
 
@@ -109,11 +123,15 @@ public class EMSEchoServerImpl implements EchoServer {
         private EchoWorker(QueueConnection connection,
                 QueueSession session,
                 QueueReceiver rec,
-                MessageProducer prod) {
+                MessageProducer prod,
+                TopicPublisher pub,
+                TopicSession tSession) {
             this.sess = session;
             this.con = connection;
             this.rec = rec;
             this.prod = prod;
+            this.pub = pub;
+            this.tSession = tSession;
         }
 
         @Override
@@ -136,10 +154,6 @@ public class EMSEchoServerImpl implements EchoServer {
             Message message = rec.receive();
             //log.debug("after queue receive");
 
-            if (message == null) {
-                return;
-            }
-
             log.debug("request");
 
             ObjectMessage objMsg = (ObjectMessage) message;
@@ -148,23 +162,25 @@ public class EMSEchoServerImpl implements EchoServer {
 
             EchoPDU pdu = EchoPDU.createServerEchoPDU(receivedPdu, startTime);
             ObjectMessage emsObj = this.sess.createObjectMessage(pdu);
-            
+           
+            TextMessage traceMsg = 
+                    EMSEchoServerUtility.createTraceJsonMessage(receivedPdu, 
+                                                                this.tSession);
+            if ( traceMsg != null )
+            {
+                log.debug("publishing transaction msg");
+                pub.send(traceMsg);
+            }
+           
             log.debug("response");
             prod.send(emsObj);
-
-            /*
-             if (receivedPdu.getLastRequest()) {
-             log.debug("Letzter Request des Clients " + receivedPdu.getClientName());
-             finished = true;
-             }
-             */
         }
 
         private void closeConnection() {
             try {
                 con.close();
             } catch (JMSException e) {
-                throw new RuntimeException(e);
+                log.error("Error closing connection.");
             }
         }
     }
