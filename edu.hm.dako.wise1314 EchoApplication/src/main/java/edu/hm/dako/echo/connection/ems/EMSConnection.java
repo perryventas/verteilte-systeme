@@ -33,11 +33,11 @@ public class EMSConnection implements Connection, ExceptionListener {
 	private QueueReceiver 	receiver 		   = null;
 	private Queue		    responseQueue	   = null;
 	
-	private String userName  				   = "dev";
-	private String password                    = "dev";
+	private String userName  				   = CONSTANTS.USER_NAME;
+	private String password                    = CONSTANTS.PASSWORD;
 	
-	private String requestQueueName            = "dev.request";
-	private String responseQueueName 		   = "dev.response";
+	private String requestQueueName            = CONSTANTS.REQUEST_QUEUE_NAME;
+	private String responseQueueName 		   = CONSTANTS.RESPONSE_QUEUE_NAME;
 	
 	public EMSConnection( TibjmsQueueConnectionFactory factory )
 	{

@@ -5,23 +5,24 @@ import edu.hm.dako.echo.common.ExceptionHandler;
 import edu.hm.dako.echo.common.SharedClientStatistics;
 import edu.hm.dako.echo.connection.Connection;
 import edu.hm.dako.echo.connection.ConnectionFactory;
-import edu.hm.dako.echo.connection.ems.tibjmsQueueReceiver;
+import edu.hm.dako.echo.connection.ems.CONSTANTS;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
 import java.net.SocketTimeoutException;
 
+import javax.jms.Destination;
+import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageProducer;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import javax.jms.Queue;
 import javax.jms.QueueConnection;
-import javax.jms.QueueReceiver;
-import javax.jms.QueueSession;
 import javax.jms.Session;
 
 /**
@@ -35,20 +36,18 @@ public class EMSConnectionReusingClient extends AbstractClient {
     private Connection connection;
     
     private QueueConnection connection2 = null;
-    private QueueSession session = null;
-    private QueueReceiver receiver = null;
-    private Queue responseQueue = null;
     private String serverUrl = null;
-    private final String userName = "dev";
-    private final String password = "dev";
-    private final String responseQueueName = "dev.response";
+    private final String userName = CONSTANTS.USER_NAME;
+    private final String password = CONSTANTS.PASSWORD;
+    private final String responseQueueName = CONSTANTS.RESPONSE_QUEUE_NAME;
 
     public EMSConnectionReusingClient(int serverPort, String remoteServerAddress, int numberOfClient,
                                    int messageLength, int numberOfMessages, int clientThinkTime,
                                    SharedClientStatistics sharedData, ConnectionFactory connectionFactory) {
         super(serverPort, remoteServerAddress, numberOfClient, messageLength, numberOfMessages, clientThinkTime,
                 sharedData, connectionFactory);
-        serverUrl = "tcp://" + remoteServerAddress + ":" + serverPort;
+        this.serverUrl = "tcp://" + remoteServerAddress + ":" + serverPort;
+        PropertyConfigurator.configureAndWatch("log4j.client.properties", 60 * 1000);
     }
 
     /**
@@ -61,7 +60,9 @@ public class EMSConnectionReusingClient extends AbstractClient {
         	receiveEcho();
         	
             waitForOtherClients();
+            
             connection = connectionFactory.connectToServer(remoteServerAddress, serverPort, localPort);
+            
             for (int i = 0; i < numberOfMessagesToSend; i++) {
                 try {
                     doEcho(i);
@@ -82,85 +83,91 @@ public class EMSConnectionReusingClient extends AbstractClient {
     
     private void doEcho(int i) throws Exception {
         sharedData.incrSentMsgCounter(clientNumber);
-        connection.send(constructEchoPDU(i));
+        EchoPDU pdu = constructEchoPDU(i);
+        pdu.setMessageNumber(i);
+        connection.send(pdu);
         Thread.sleep(clientThinkTime);
     }
     
     private void receiveEcho() throws Exception {
-    	//connection first
         TibjmsQueueConnectionFactory factory = new TibjmsQueueConnectionFactory(serverUrl);
         this.connection2 = factory.createQueueConnection(userName, password);
-        this.session = connection2.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-        this.responseQueue = session.createQueue(responseQueueName);
-        this.receiver = session.createReceiver(responseQueue);
         
-        //thread second, gimme pdus derp
-		new EMSQueueReciever(this.numberOfMessagesToSend,this.connection2, this.receiver).run();
+		new EMSQueueReciever(this.connection2,this.responseQueueName);
     }
     
     
     
 
 
-    private class EMSQueueReciever implements Runnable {
-
+    private class EMSQueueReciever implements ExceptionListener, MessageListener {
+    	
         private QueueConnection connection2;
-        private QueueReceiver receiver;
-        private int numberOfMessagesToSend;
-        private int receivedMessageNum = 0;
+        private Session session;
+        private String responseQueueName;
+        private MessageConsumer msgConsumer = null;
+        private Destination destination = null;
 
-        private EMSQueueReciever(int numberOfMessagesToSend,
-        		QueueConnection connection2,
-                QueueReceiver receiver) {
-        	this.numberOfMessagesToSend = numberOfMessagesToSend;
+        private EMSQueueReciever(QueueConnection connection2, String responseQueueName) {
             this.connection2 = connection2;
-            this.receiver = receiver;
-        }
-
-        @Override
-        public void run() {
-        	startConnection();
-           
-            while (receivedMessageNum < numberOfMessagesToSend && !Thread.currentThread().isInterrupted()) { //was wenn nur 90/100 ankommen?
-                try {
-                    javax.jms.Message message = receiver.receive();
-                    if (message == null)
-                        break;
-
-                    log.debug("Received message: "+message);
-                    
-                    receivedMessageNum++;
-                    
-                    ObjectMessage objMsg = (ObjectMessage) message;
-                    EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();
-                    long rtt = System.nanoTime() - receivedPdu.getClientTime();
-                    postReceive(receivedMessageNum, receivedPdu, rtt);
-
-                } catch (Exception e) {
-                    closeConnection();
-                    throw new RuntimeException(e);
-                }
-            }
-            closeConnection();
-            log.debug(Thread.currentThread().getName() + " beendet sich");
+            this.responseQueueName = responseQueueName;
+            
+            connectToQueue();
+            
+            startConsumer();
         }
         
-        private void startConnection() {
+        private void connectToQueue() {
             try {
-        		connection2.start();
-                log.debug("Warte auf PDUs...putt-putt-putt-putt...");
-            } catch (JMSException e) {
-                throw new RuntimeException(e);
-            }
+				session = connection2.createSession();
+	            connection2.setExceptionListener(this);
+	            destination = session.createQueue(this.responseQueueName);
+	            log.debug("Subscribing to destination: "+this.responseQueueName);
+			} catch (JMSException e1) {
+	            log.debug("JMSException: "+e1.getMessage());
+			}        	
         }
+        
 
-        private void closeConnection() {
+		public void startConsumer() {
             try {
-            	connection2.close();
-            } catch (JMSException e) {
-                throw new RuntimeException(e);
+	            msgConsumer = session.createConsumer(destination);
+	            msgConsumer.setMessageListener(this);
+	            connection2.start();
+	        }
+	        catch (Exception e)
+	        {
+	            log.debug("Exception: " + e.getMessage());
+	        }
+			
+		}
+        
+    	@Override
+    	public void onMessage(Message msg) {
+            try
+            {
+                log.debug("Received message: " + msg);
+                
+                ObjectMessage objMsg = (ObjectMessage) msg;
+                EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();
+                
+                long rtt = System.nanoTime() - receivedPdu.getClientTime();
+                
+                postReceive(receivedPdu.getMessageNumber(), receivedPdu, rtt);
+                
+                //log.debug(" PDU-ID: " + receivedPdu.getMessageNumber() + " RTT: " + rtt + " ns");
+                //log.debug(" Diese Zeit: " + System.nanoTime() + " PDU-Client-Zeit: " + receivedPdu.getClientTime());
             }
-        }
-    }
+            catch (Exception e)
+            {
+               log.debug("Unexpected exception in the message callback!");
+            }
+    	}
+
+    	@Override
+    	public void onException(JMSException e) {
+    		log.debug("CONNECTION EXCEPTION: "+ e.getMessage());
+    	}
+	}
 }
   
