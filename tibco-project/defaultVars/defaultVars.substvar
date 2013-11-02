@@ -42,6 +42,14 @@
 			<modTime>1382626731091</modTime>
 		</globalVariable>
 		<globalVariable>
+			<name>JMS_SELECTOR</name>
+			<value>3</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1383384683816</modTime>
+		</globalVariable>
+		<globalVariable>
 			<name>JmsProviderUrl</name>
 			<value>tcp://localhost:7222</value>
 			<deploymentSettable>true</deploymentSettable>
@@ -64,6 +72,14 @@
 			<serviceSettable>false</serviceSettable>
 			<type>String</type>
 			<modTime>1382626731156</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Rollback</name>
+			<value>false</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Boolean</type>
+			<modTime>1383390353976</modTime>
 		</globalVariable>
 		<globalVariable>
 			<name>RvDaemon</name>

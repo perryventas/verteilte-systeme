@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd"
+	 targetNamespace="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="data" type="dataType"/>
+	<xs:complexType name="dataType">
+		<xs:sequence>
+			<xs:element ref="clientThreadName" minOccurs="0"/>
+			<xs:element ref="clientTime" minOccurs="0"/>
+			<xs:element ref="message" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="clientThreadName" type="xs:string"/>
+	<xs:element name="clientTime" type="xs:long"/>
+	<xs:element name="message" type="xs:string"/>
+</xs:schema>
