@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/tibco-project-Max/BusinessProcess/EMS_JMS/JSONSchema_DATA/Schema_data.xsd" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" xmlns:pfx="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd">
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" schemaLocation="/JSONSchema/Schema_data.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/tibco-project-Max/BusinessProcess/EMS_JMS/JSONSchema_DATA/Schema_data.xsd" schemaLocation="/tibco-project-Max/BusinessProcess/EMS_JMS/JSONSchema_DATA/Schema_data.xsd"/>
+    <pd:name>tibco-project-Max/BusinessProcess/EMS_JMS/TopicSubscriber/TopicSubscriber.process</pd:name>
+    <pd:startName>JMS Topic Subscriber</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="JMS Topic Subscriber">
+        <pd:type>com.tibco.plugin.jms.JMSTopicEventSource</pd:type>
+        <pd:resourceType>ae.activities.JMSTopicEventSource</pd:resourceType>
+        <pd:x>78</pd:x>
+        <pd:y>171</pd:y>
+        <config>
+            <PermittedMessageType>Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>dev.dbtatopic</destination>
+                <durable>false</durable>
+                <subscriptionName>MyDurableSubscriber</subscriptionName>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/tibco-project-Max/SharedResources/Connections/EMS_JMS/TIBCO_EMS_JMS_Connection.sharedjmscon</ConnectionReference>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>512</pd:endX>
+    <pd:endY>163</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1383318881352</pd:targetNamespace>
+    <pd:activity name="Log">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>380</pd:x>
+        <pd:y>163</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <xsl:for-each select="$Parse-JSON-1/ns2:ActivityOutputClass/data">
+                <ns1:ActivityInput>
+                    <message>
+                        <xsl:value-of select="message"/>
+                    </message>
+                </ns1:ActivityInput>
+            </xsl:for-each>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Parse-JSON-1">
+        <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
+        <pd:x>229</pd:x>
+        <pd:y>162</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>true</BadgerfishCheck>
+            <ActivityOutputEditor ref="pfx3:data"/>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInputClass>
+                <jsonString>
+                    <xsl:value-of select="$JMS-Topic-Subscriber/ns:ActivityOutput/Body"/>
+                </jsonString>
+            </ns2:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="TRACE INSERT">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>379</pd:x>
+        <pd:y>249</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/tibco-project-Max/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
+            <statement>INSERT INTO trace
+(CLIENT_NAME, CLIENT_THREAD_NAME, SERVER_THREAD_NAME, MESSAGE)
+VALUES
+(?,?,?,?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>CLIENT_NAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>CLIENT_THREAD_NAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>SERVER_THREAD_NAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>MESSAGE</parameterName>
+                    <dataType>LONGNVARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <xsl:for-each select="$Parse-JSON-1/ns2:ActivityOutputClass/data">
+                <jdbcUpdateActivityInput>
+                    <CLIENT_NAME>
+                        <xsl:value-of select="clientName"/>
+                    </CLIENT_NAME>
+                    <CLIENT_THREAD_NAME>
+                        <xsl:value-of select="clientThreadName"/>
+                    </CLIENT_THREAD_NAME>
+                    <SERVER_THREAD_NAME>
+                        <xsl:value-of select="serverThreadName"/>
+                    </SERVER_THREAD_NAME>
+                    <MESSAGE>
+                        <xsl:value-of select="message"/>
+                    </MESSAGE>
+                </jdbcUpdateActivityInput>
+            </xsl:for-each>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="COUNT INSERT">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>378</pd:x>
+        <pd:y>77</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <statement>INSERT INTO count
+(COUNT)
+VALUES
+( '1')</statement>
+            <jdbcSharedConfig>/tibco-project-Max/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput/>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Log</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JMS Topic Subscriber</pd:from>
+        <pd:to>Parse-JSON-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse-JSON-1</pd:from>
+        <pd:to>Log</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse-JSON-1</pd:from>
+        <pd:to>TRACE INSERT</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>TRACE INSERT</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse-JSON-1</pd:from>
+        <pd:to>COUNT INSERT</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>COUNT INSERT</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

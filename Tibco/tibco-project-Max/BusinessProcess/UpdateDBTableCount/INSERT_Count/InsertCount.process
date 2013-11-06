@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <pd:name>BusinessProcess/UpdateDBTableCount/INSERT_Count/InsertCount.process</pd:name>
+    <pd:name>tibco-project-Max/BusinessProcess/UpdateDBTableCount/INSERT_Count/InsertCount.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startX>63</pd:startX>
     <pd:startY>140</pd:startY>
@@ -15,7 +15,7 @@
         <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
         <pd:x>187</pd:x>
-        <pd:y>139</pd:y>
+        <pd:y>138</pd:y>
         <config>
             <timeout>10</timeout>
             <commit>false</commit>

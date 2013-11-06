@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <pd:name>BusinessProcess/UpdateDBTableTrace/INSERT_Trace/InsertTrace.process</pd:name>
+    <pd:name>tibco-project-Max/BusinessProcess/UpdateDBTableTrace/INSERT_Trace/InsertTrace.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startX>45</pd:startX>
     <pd:startY>157</pd:startY>
@@ -22,7 +22,7 @@
             <emptyStrAsNil>false</emptyStrAsNil>
             <jdbcSharedConfig>/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
             <statement>INSERT INTO trace
-(CLIENT, CLIENT_THREAD_NAME, SERVER_THREAD_NAME, MESSAGE)
+(CLIENT_NAME, CLIENT_THREAD_NAME, SERVER_THREAD_NAME, MESSAGE)
 VALUES
 ('Max', 'INSERT_Test', 'Test', 'Der INSERT sollte funktionieren')</statement>
         </config>
