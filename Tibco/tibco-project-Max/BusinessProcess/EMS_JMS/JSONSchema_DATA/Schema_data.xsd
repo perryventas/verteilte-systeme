@@ -6,7 +6,9 @@
 	<xs:element name="data" type="dataType"/>
 	<xs:complexType name="dataType">
 		<xs:sequence>
+			<xs:element ref="clientName"/>
 			<xs:element name="clientThreadName" type="xs:string"/>
+			<xs:element ref="serverThreadName"/>
 			<xs:element name="clientTime" type="xs:long"/>
 			<xs:element name="message" type="xs:string"/>
 		</xs:sequence>
@@ -14,4 +16,6 @@
 	<xs:element name="clientThreadName" type="xs:string"/>
 	<xs:element name="clientTime" type="xs:long"/>
 	<xs:element name="message" type="xs:string"/>
+	<xs:element name="clientName" type="xs:string"/>
+	<xs:element name="serverThreadName" type="xs:string"/>
 </xs:schema>

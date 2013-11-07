@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" xmlns:pfx="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd">
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" xmlns:pfx="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd">
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" schemaLocation="/JSONSchema/Schema_data.xsd"/>
-    <pd:name>Demos/TopicSubscriber.process</pd:name>
+    <pd:name>tibco-project/Demos/TopicSubscriber.process</pd:name>
     <pd:startName>JMS Topic Subscriber</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
