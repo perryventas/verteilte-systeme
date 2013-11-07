@@ -1,5 +1,10 @@
 package edu.hm.dako.echo.admin;
 
+/**
+ * @author Christoph Friegel
+ * @version 1.0
+ */
+
 public class Count {
 
 	String countNr = "-";

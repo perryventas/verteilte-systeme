@@ -32,7 +32,7 @@ public class AdminClient {
       + CONSTANTS.DB_NAME + "?user=" + CONSTANTS.DB_USER_NAME + "&password=" + CONSTANTS.DB_PASSWORD );
 
       statement = connect.createStatement();
-      resultSet = statement.executeQuery("select sum(count) as COUNTNR, MIN(CTIMESTAMP) as CTMAX,"+
+      resultSet = statement.executeQuery("select count(count) as COUNTNR, MIN(CTIMESTAMP) as CTMAX,"+
       " MAX(CTIMESTAMP) as CTMIN FROM "+CONSTANTS.COUNT_TABLE_NAME);
 
       return writeCountTable(resultSet);
@@ -67,9 +67,11 @@ public class AdminClient {
   private Count writeCountTable(ResultSet rs) throws SQLException {
 	  Count obj = new Count();
 	  
-		if(rs==null || rs.wasNull()) {
-			return obj;
-		}
+	  rs.next();
+	  if(rs.getInt(1)==0) //rs in case "count(*)" is never null 
+		return obj;
+	  else 
+		rs.beforeFirst(); //sets pointer back
 
 	  	while (rs.next()) {
 	      String countNr = rs.getString("COUNTNR");

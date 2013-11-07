@@ -23,6 +23,7 @@ public class AdminClientGui extends JPanel implements ActionListener {
 	
     private static JFrame f; // Frame fuer Echo-Anwendungs-GUI 
     private static JPanel panel;
+    private static AdminClient ac;
 
     /**
      * GUI-Komponenten
@@ -61,9 +62,9 @@ public class AdminClientGui extends JPanel implements ActionListener {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Buttons
-        countButton = new Button("Zählen");
-        delButton = new Button("Löschen");
-        beendenButton = new Button("Beenden");
+        countButton = new Button("CountNow!");
+        delButton = new Button("DeleteEmAll");
+        beendenButton = new Button("Exit");
     }
 
 
@@ -77,15 +78,15 @@ public JComponent buildPanel() {
     initComponents();
 
     // Layout definieren
+    
     FormLayout layout = new FormLayout(
-            "right:max(40dlu;pref), 3dlu, 70dlu, 7dlu, "
-                    + "right:max(40dlu;pref), 3dlu, 70dlu",
-            "p, 3dlu, p, 3dlu, p, 3dlu, p, 9dlu, " +
-                    "p, 3dlu, p, 3dlu, p, 3dlu, p, 9dlu, " +
-                    "p, 3dlu, p, 3dlu, p, 3dlu, p, 9dlu, " +
-                    "p, 3dlu, p, 3dlu, p, 3dlu, p, 9dlu, " +
-                    "p, 3dlu, p, 3dlu, " +
-                    "p, 3dlu, p, 3dlu, p");
+            "right:max(50dlu;p), 4dlu, 75dlu, 7dlu, "
+                    + "right:p, 4dlu, 75dlu",
+            "p, 2dlu, p, 3dlu, p, 3dlu, p, 7dlu, " +
+                    "p, 2dlu, p, 3dlu, p, 3dlu, p," +
+					"2dlu, p, 3dlu, p, 3dlu, p," +
+                    "2dlu, p, 3dlu, " +
+                    "2dlu, p, 3dlu, p");
 
     panel = new JPanel(layout);
     panel.setBorder(Borders.DIALOG_BORDER);
@@ -95,38 +96,39 @@ public JComponent buildPanel() {
            */
 
     CellConstraints cc = new CellConstraints();
-    panel.add(createSeparator("Eingabe"), cc.xyw(1, 1, 7));
+    panel.add(createSeparator("Input"), cc.xyw(1, 1, 7));
     panel.add(new JLabel("Client-ID"), cc.xy(1, 3));
-    panel.add(one, cc.xy(7, 3));
+    panel.add(one, cc.xy(3, 3));
     
-    panel.add(createSeparator("Ausgabe"), cc.xyw(1, 15, 7));
-    panel.add(new JLabel("Count:"), cc.xy(5, 17));
-    panel.add(two, cc.xy(7, 17));
-    panel.add(new JLabel("MinCountTime:"), cc.xy(1, 17));
-    panel.add(three, cc.xy(3, 17));
-    panel.add(new JLabel("MaxCountTime:"), cc.xy(1, 19));
-    panel.add(four, cc.xy(3, 19));
+    panel.add(createSeparator("Output"), cc.xyw(1, 9, 7));
+    panel.add(new JLabel("Count:"), cc.xy(1, 11));
+    panel.add(two, cc.xy(3, 11));
+    panel.add(new JLabel("MinCountTime:"), cc.xy(5, 11));
+    panel.add(three, cc.xy(7, 11));
+    panel.add(new JLabel("MaxCountTime:"), cc.xy(5, 13));
+    panel.add(four, cc.xy(7, 13));
 
     one.setText("1");
 
     
     // Meldungsbereich
-    panel.add(scrollPane, cc.xyw(1, 33, 7));
+    panel.add(scrollPane, cc.xyw(1, 19, 7));
 
     messageArea.setLineWrap(true);
     messageArea.setWrapStyleWord(true);
     messageArea.setEditable(false);
     messageArea.setCaretPosition(0);
 
-    panel.add(createSeparator(""), cc.xyw(1, 35, 7));
+    panel.add(createSeparator(""), cc.xyw(1, 21, 7));
 
-    panel.add(countButton, cc.xyw(2, 37, 2));   //Starten
-    panel.add(delButton, cc.xyw(4, 37, 2));       //Loeschen
-    panel.add(beendenButton, cc.xyw(6, 37, 2)); //Abbrechen
+    panel.add(countButton, cc.xyw(2, 23, 2));   //Starten
+    panel.add(delButton, cc.xyw(4, 23, 2));       //Loeschen
+    panel.add(beendenButton, cc.xyw(6, 23, 2)); //Abbrechen
 
     countButton.addActionListener(this);
     delButton.addActionListener(this);
     beendenButton.addActionListener(this);
+    
     return panel;
 }
 
@@ -136,11 +138,11 @@ public JComponent buildPanel() {
  */
 public void actionPerformed(ActionEvent e) {
 
-    if (e.getActionCommand().equals("Zählen")) {
+    if (e.getActionCommand().equals("CountNow!")) {
         countAction(e);
-    } else if (e.getActionCommand().equals("Löschen")) {
+    } else if (e.getActionCommand().equals("DeleteEmAll")) {
         delAction(e);
-    } else if (e.getActionCommand().equals("Beenden"))
+    } else if (e.getActionCommand().equals("Exit"))
         finishAction(e);
 }
 
@@ -149,7 +151,6 @@ public void actionPerformed(ActionEvent e) {
  *
  */
 private void countAction(ActionEvent e) {
-    AdminClient ac = new AdminClient();
     
     if(isInteger(one.getText()))
 		try {
@@ -157,7 +158,7 @@ private void countAction(ActionEvent e) {
 			two.setText( count.getCountNr() );
 			three.setText( count.getMaxDate() );
 			four.setText( count.getMinDate() );
-			setMessageLine(new java.util.Date() + ": Count gezählt!");
+			setMessageLine(new java.util.Date() + ": Counted!");
 		} catch (Exception e1) {
 			setMessageLine(e1.getMessage());
 		}
@@ -170,11 +171,10 @@ private void countAction(ActionEvent e) {
  *
  */
 private void delAction(ActionEvent e) {
-    AdminClient ac = new AdminClient();
     
     try {
-		ac.deleteAllData();
-		setMessageLine(new java.util.Date() + ": Trace- und Count-Datenbank geleert!");
+    	ac.deleteAllData();
+		setMessageLine(new java.util.Date() + ": Trace- and Count-Database truncated!");
 	} catch (Exception e1) {
 		setMessageLine(e1.getMessage());
 	}
@@ -185,16 +185,15 @@ private void delAction(ActionEvent e) {
  * 
  */
 private void finishAction(ActionEvent e) {
-    setMessageLine("Programm wird beendet...");
+    setMessageLine("Shutdoooown...");
 
     // Programm beenden
     System.exit(0);
 }
 
 /**
- * Schlieï¿½en des Fensters und Beenden des Programms
+ * Schließen des Fensters und Beenden des Programms
  *
- * @param e
  */
 public void windowClosing(WindowEvent e) {
     System.exit(0);
@@ -239,11 +238,13 @@ public static boolean isInteger(String s) {
 	  public static void main(String[] args) throws Exception {
 		    PropertyConfigurator.configureAndWatch("log4j.admin.properties", 60 * 1000);
 
+		    ac = new AdminClient();
 		    f = new JFrame("Admin Client GUI");
 		    f.setTitle("Administration");
 		    f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		    JComponent panel = new AdminClientGui().buildPanel();
 		    f.getContentPane().add(panel);
+		    f.setResizable(false);
 		    f.pack();
 		    f.setVisible(true);
 	  }

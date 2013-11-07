@@ -149,6 +149,7 @@ public class BenchmarkingClientGui extends JPanel
         f.add(new BenchmarkingClientGui());
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JComponent panel = new BenchmarkingClientGui().buildPanel();
+	    f.setResizable(false);
         f.getContentPane().add(panel);
         f.pack();
         f.setVisible(true);
