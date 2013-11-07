@@ -16,7 +16,7 @@ public class EchoPDU implements Serializable {
     private String serverThreadName; // Name des Threads, der den Request im Server bearbeitet
     private String message;          // Echo-Nachricht (eigentliche Nachricht in Textform)
     boolean lastRequest;             // Kennzeichen, ob Client letzte Nachricht sendet. 
-    								 // Dieses Kennzeichen dient dem Server dazu, um festzustellen, 
+    private String clientThreadName; // Dieses Kennzeichen dient dem Server dazu, um festzustellen, 
      								 // ob sich der Client nach der Nachricht beendet
     private long serverTime; 		 // Zeit in Nanosekunden, die der Server benoetigt. Diese
     								 // Zeit wird vom Server vor dem Absenden der Response eingetragen.
@@ -26,6 +26,7 @@ public class EchoPDU implements Serializable {
     public EchoPDU() {
         clientName = null;
         serverThreadName = null;
+        clientThreadName = null;
         message = null;
         serverTime = 0;
         clientTime = System.nanoTime();
@@ -41,6 +42,7 @@ public class EchoPDU implements Serializable {
         echoPDU.setServerTime(System.nanoTime() - startTime);
         echoPDU.setClientTime(receivedPdu.getClientTime());
         echoPDU.setMessageNumber(receivedPdu.getMessageNumber());
+        echoPDU.setClientThreadName(receivedPdu.getClientThreadName());
         return echoPDU;
     }
 
@@ -58,6 +60,10 @@ public class EchoPDU implements Serializable {
 
     public void setServerThreadName(String name) {
         this.serverThreadName = name;
+    }
+
+    public void setClientThreadName(String name) {
+        this.clientThreadName = name;
     }
 
     public void setMessage(String msg) {
@@ -82,6 +88,10 @@ public class EchoPDU implements Serializable {
 
     public String getServerThreadName() {
         return (serverThreadName);
+    }
+    
+    public String getClientThreadName() {
+        return (clientThreadName);
     }
 
     public String getMessage() {

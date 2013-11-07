@@ -164,7 +164,7 @@ public class EMSEchoServerImpl implements EchoServer {
             ObjectMessage emsObj = this.sess.createObjectMessage(pdu);
            
             TextMessage traceMsg = 
-                    EMSEchoServerUtility.createTraceJsonMessage(receivedPdu, 
+                    EMSEchoServerUtility.createTraceJsonMessage(receivedPdu, pdu,
                                                                 this.tSession);
             if ( traceMsg != null )
             {

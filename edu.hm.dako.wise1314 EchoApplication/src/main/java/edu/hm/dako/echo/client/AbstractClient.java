@@ -1,9 +1,13 @@
 package edu.hm.dako.echo.client;
 
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.common.SharedClientStatistics;
 import edu.hm.dako.echo.connection.ConnectionFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -80,7 +84,16 @@ public abstract class AbstractClient implements Runnable {
     protected EchoPDU constructEchoPDU(int messageNumber) {
         // Echo-Nachricht aufbauen
         EchoPDU pdu = new EchoPDU();
-        pdu.setClientName(Thread.currentThread().getName());
+        String computername;
+		try {
+			computername = InetAddress.getLocalHost().getHostName();
+	        pdu.setClientName( computername );
+		} catch (UnknownHostException e) {
+			log.debug("Lokaler Name konnte nicht bezogen werden: " + e.getMessage());
+		}
+
+        pdu.setClientThreadName(Thread.currentThread().getName());
+        
         String echoMsg = "";
         for (int j = 0; j < messageLength; j++) {
             echoMsg += "+";
