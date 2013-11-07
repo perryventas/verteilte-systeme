@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <pd:name>tibco-project-Max/BusinessProcess/QueryDBTableTrace/GET_Trace/GetTrace.process</pd:name>
+    <pd:name>Tibco-Project Verteilte Systeme/BusinessProcess/DB-Abfrage/GET_Trace/GetTrace.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startX>43</pd:startX>
     <pd:startY>186</pd:startY>
@@ -21,7 +21,7 @@
             <commit>false</commit>
             <maxRows>100</maxRows>
             <emptyStrAsNil>false</emptyStrAsNil>
-            <jdbcSharedConfig>/tibco-project-Max/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
+            <jdbcSharedConfig>/Tibco-Project Verteilte Systeme/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
             <statement>SELECT *
 FROM trace</statement>
             <oraObjects/>
@@ -30,7 +30,7 @@ FROM trace</statement>
             <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
             <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
             <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
-            <QueryOutputCachedSchemaColumns>CLIENT</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaColumns>CLIENT_NAME</QueryOutputCachedSchemaColumns>
             <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
             <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
             <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>

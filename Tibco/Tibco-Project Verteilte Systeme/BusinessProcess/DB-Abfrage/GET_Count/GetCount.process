@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <pd:name>BusinessProcess/QueryDBTableCount/GET_Count/GetCount.process</pd:name>
+    <pd:name>Tibco-Project Verteilte Systeme/BusinessProcess/DB-Abfrage/GET_Count/GetCount.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startX>46</pd:startX>
-    <pd:startY>158</pd:startY>
+    <pd:startY>153</pd:startY>
     <pd:returnBindings/>
     <pd:endName>End</pd:endName>
     <pd:endX>343</pd:endX>
-    <pd:endY>158</pd:endY>
+    <pd:endY>153</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1383243872849</pd:targetNamespace>
     <pd:activity name="Get Count">
         <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
-        <pd:x>213</pd:x>
-        <pd:y>157</pd:y>
+        <pd:x>212</pd:x>
+        <pd:y>152</pd:y>
         <config>
             <timeout>10</timeout>
             <commit>false</commit>
             <maxRows>100</maxRows>
             <emptyStrAsNil>false</emptyStrAsNil>
-            <jdbcSharedConfig>/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
+            <jdbcSharedConfig>/Tibco-Project Verteilte Systeme/SharedResources/Connections/JDBC/JDBCConnection.sharedjdbc</jdbcSharedConfig>
             <statement>SELECT *
 FROM count</statement>
             <Prepared_Param_DataType/>
