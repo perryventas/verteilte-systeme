@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd" xmlns:tns="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd">
+    <import namespace="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd" location="Schema_data.xsd"/>
+    <message name="GetTraceOut">
+        <part name="Data" element="ns:data"/>
+    </message>
+    <message name="GetTraceClientName">
+        <part name="ClientName" element="ns:clientName"/>
+    </message>
+    <message name="GetTraceClientThreadName">
+        <part name="ClientThreadName" element="ns:clientThreadName"/>
+    </message>
+    <message name="GetTraceServerThreadName">
+        <part name="ServerThreadName" element="ns:serverThreadName"/>
+    </message>
+    <message name="GetTraceMessage">
+        <part name="Message" element="ns:message"/>
+    </message>
+    <portType name="GetTraceByClientName">
+        <operation name="GetTrace">
+            <input message="ns:GetTraceClientName"/>
+            <output message="tns:GetTraceOut"/>
+        </operation>
+    </portType>
+    <portType name="GetTraceByClientThreadName">
+        <operation name="GetTrace">
+            <input message="tns:GetTraceClientThreadName"/>
+            <output message="tns:GetTraceOut"/>
+        </operation>
+    </portType>
+    <portType name="GetTraceByServerThreadName">
+        <operation name="GetTrace">
+            <input message="tns:GetTraceServerThreadName"/>
+            <output message="tns:GetTraceOut"/>
+        </operation>
+    </portType>
+    <portType name="GetTraceByMessage">
+        <operation name="GetTrace">
+            <input message="tns:GetTraceMessage"/>
+            <output message="tns:GetTraceOut"/>
+        </operation>
+    </portType>
+</definitions>

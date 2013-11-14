@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created by TIBCO WSDL-->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.example.com/interface/books/GetBooksImpl" xmlns:ns0="http://www.example.com/xsd/books" xmlns:jms="http://www.tibco.com/namespaces/ws/2004/soap/binding/JMS" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:jndi="http://www.tibco.com/namespaces/ws/2004/soap/apis/jndi" name="Untitled" targetNamespace="http://www.example.com/interface/books/GetBooksImpl">
+    <wsdl:types>
+        <xsd:schema xmlns="http://www.example.com/xsd/books" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.example.com/xsd/books">
+            <xsd:complexType name="BookStoreType">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" ref="ns0:Book"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="BookType">
+                <xsd:sequence>
+                    <xsd:element ref="ns0:Title"/>
+                    <xsd:element ref="ns0:Author"/>
+                    <xsd:element ref="ns0:Date"/>
+                    <xsd:element ref="ns0:ISBN"/>
+                    <xsd:element ref="ns0:Publisher"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ISBNType">
+                <xsd:simpleContent>
+                    <xsd:extension base="xsd:string"/>
+                </xsd:simpleContent>
+            </xsd:complexType>
+            <xsd:complexType name="TitleType">
+                <xsd:simpleContent>
+                    <xsd:extension base="xsd:string"/>
+                </xsd:simpleContent>
+            </xsd:complexType>
+            <xsd:element name="Author" type="xsd:string"/>
+            <xsd:element name="Book" type="ns0:BookType"/>
+            <xsd:element name="BookStore" type="ns0:BookStoreType"/>
+            <xsd:element name="Date" type="xsd:string"/>
+            <xsd:element name="ISBN" type="ns0:ISBNType"/>
+            <xsd:element name="Publisher" type="xsd:string"/>
+            <xsd:element name="Title" type="ns0:TitleType"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="GetBooksByAuthor">
+        <wsdl:part element="ns0:Author" name="author"/>
+    </wsdl:message>
+    <wsdl:message name="GetBooksOut">
+        <wsdl:part element="ns0:BookStore" name="message"/>
+    </wsdl:message>
+    <wsdl:portType name="GetBooksByAuthor">
+        <wsdl:operation name="GetBooks">
+            <wsdl:input message="tns:GetBooksByAuthor"/>
+            <wsdl:output message="tns:GetBooksOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="QueryBooksByAuthorBinding" type="tns:GetBooksByAuthor">
+        <soap:binding style="document" transport="http://www.tibco.com/namespaces/ws/2004/soap/binding/JMS"/>
+        <jms:binding messageFormat="bytes"/>
+        <wsdl:operation name="GetBooks">
+            <wsdl:documentation>The operation has no documentation</wsdl:documentation>
+            <soap:operation soapAction="/QueryBooksByAuthor" style="document"/>
+            <wsdl:input>
+                <soap:body namespace="http://InputMessageNamespace" parts="author" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body namespace="http://OutputMessageNamespace" parts="message" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="QueryBooksByAuthor">
+        <wsdl:port binding="tns:QueryBooksByAuthorBinding" name="QueryBooksByAuthorJMSPort">
+            <soap:address location=""/>
+            <jms:connectionFactory>QueueConnectionFactory</jms:connectionFactory>
+            <jms:targetAddress destination="queue">queue.sample</jms:targetAddress>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

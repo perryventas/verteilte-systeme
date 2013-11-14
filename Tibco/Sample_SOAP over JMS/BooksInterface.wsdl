@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://www.example.com/xsd/books" xmlns:tns="http://www.example.com/interface/books" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.example.com/interface/books">
+    <import location="../Books.xsd" namespace="http://www.example.com/xsd/books"/>
+    <message name="GetBooksOut">
+        <part element="ns:BookStore" name="message"/>
+    </message>
+    <message name="GetBooksByTitle">
+        <part name="title" type="ns:TitleType"/>
+    </message>
+    <message name="GetBooksByISBN">
+        <part name="isbn" type="ns:ISBNType"/>
+    </message>
+    <message name="GetBooksByAuthor">
+        <part element="ns:Author" name="author"/>
+    </message>
+    <message name="GetBooksByPublisher">
+        <part element="ns:Publisher" name="publisher"/>
+    </message>
+    <portType name="GetBooksByTitle">
+        <operation name="GetBooks">
+            <input message="tns:GetBooksByTitle"/>
+            <output message="tns:GetBooksOut"/>
+        </operation>
+    </portType>
+    <portType name="GetBooksByISBN">
+        <operation name="GetBooks">
+            <input message="tns:GetBooksByISBN"/>
+            <output message="tns:GetBooksOut"/>
+        </operation>
+    </portType>
+    <portType name="GetBooksByAuthor">
+        <operation name="GetBooks">
+            <input message="tns:GetBooksByAuthor"/>
+            <output message="tns:GetBooksOut"/>
+        </operation>
+    </portType>
+    <portType name="GetBooksByPublisher">
+        <operation name="GetBooks">
+            <input message="tns:GetBooksByPublisher"/>
+            <output message="tns:GetBooksOut"/>
+        </operation>
+    </portType>
+</definitions>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx5="http://www.tibco.com/TNT/XMLParseActivity" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:pfx3="http://www.tibco.com/namespaces/tnt/plugins/file/v2" xmlns:pfx2="http://www.tibco.com/pe/DeployedVarsType" xmlns:pfx="http://www.books.org" xmlns:pfx6="http://www.example.com/xsd/books" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.example.com/xsd/books" schemaLocation="/Books.xsd"/>
+    <pd:name>Sample_SOAP mit JMS/Query.process</pd:name>
+    <pd:description/>
+    <pd:startName>Start</pd:startName>
+    <pd:startDescription/>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="param" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>45</pd:startX>
+    <pd:startY>65</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:variable name="var" select="$Start/root/param"/>
+            <pfx6:BookStore>
+                <xsl:for-each select="$Parse-XML/pfx6:BookStore/pfx6:Book[pfx6:Author = $var]">
+                    <pfx6:Book>
+                        <pfx6:Title>
+                            <xsl:value-of select="pfx6:Title"/>
+                        </pfx6:Title>
+                        <pfx6:Author>
+                            <xsl:value-of select="pfx6:Author"/>
+                        </pfx6:Author>
+                        <pfx6:Date>
+                            <xsl:value-of select="pfx6:Date"/>
+                        </pfx6:Date>
+                        <pfx6:ISBN>
+                            <xsl:value-of select="pfx6:ISBN"/>
+                        </pfx6:ISBN>
+                        <pfx6:Publisher>
+                            <xsl:value-of select="pfx6:Publisher"/>
+                        </pfx6:Publisher>
+                    </pfx6:Book>
+                </xsl:for-each>
+            </pfx6:BookStore>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endDescription/>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element ref="pfx6:BookStore"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>506</pd:endX>
+    <pd:endY>65</pd:endY>
+    <pd:errorSchemas/>
+    <pd:targetNamespace>http://xmlns.example.com/1384428889397</pd:targetNamespace>
+    <pd:activity name="Read File">
+        <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
+        <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
+        <pd:description/>
+        <pd:x>228</pd:x>
+        <pd:y>65</pd:y>
+        <config>
+            <excludeContent>false</excludeContent>
+            <encoding>text</encoding>
+        </config>
+        <pd:inputBindings>
+            <pfx3:ReadActivityInputClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/pfx2:GlobalVariables/ReadBookStoreXML"/>
+                </fileName>
+            </pfx3:ReadActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Parse XML">
+        <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLParseActivity</pd:resourceType>
+        <pd:description/>
+        <pd:x>399</pd:x>
+        <pd:y>65</pd:y>
+        <config>
+            <validateOutput>true</validateOutput>
+            <inputStyle>text</inputStyle>
+            <term ref="pfx6:BookStore"/>
+        </config>
+        <pd:inputBindings>
+            <xmlString>
+                <xsl:value-of select="$Read-File/pfx4:ReadActivityOutputTextClass/fileContent/textContent"/>
+            </xmlString>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Read File</pd:from>
+        <pd:to>Parse XML</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse XML</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Read File</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
