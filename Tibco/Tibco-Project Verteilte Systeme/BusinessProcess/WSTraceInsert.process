@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://xmlns.tibco.com/encodings/mime" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/SignalInActivitySchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/Schemas/Schema_data.xsd" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/BusinessProcess/Schema_data.xsd" xmlns:pfx="http://www.tibco.com/pe/WriteToLogActivitySchema">
-    <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/BusinessProcess/Schema_data.xsd" schemaLocation="/BusinessProcess/Schema_data.xsd"/>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/Schemas/Schema_data.xsd">
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/Schemas/Schema_data.xsd" schemaLocation="/Schemas/Schema_data.xsd"/>
-    <pd:name>BusinessProcess/WSCountInsert.process</pd:name>
+    <pd:name>BusinessProcess/WSTraceInsert.process</pd:name>
     <pd:startName>HTTP Receiver</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
@@ -10,14 +9,14 @@
     <pd:starter name="HTTP Receiver">
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>65</pd:x>
-        <pd:y>76</pd:y>
+        <pd:x>71</pd:x>
+        <pd:y>50</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>UTF8</defaultEncoding>
             <inputOutputVersion>5.3.0</inputOutputVersion>
             <newMimeSupport>true</newMimeSupport>
-            <sharedChannel>/SharedResources/HTTPCountServer.sharedhttp</sharedChannel>
+            <sharedChannel>/SharedResources/HTTPTraceServer.sharedhttp</sharedChannel>
             <parsePostData>false</parsePostData>
             <customField/>
             <Headers>
@@ -40,16 +39,16 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>662</pd:endX>
-    <pd:endY>79</pd:endY>
+    <pd:endX>702</pd:endX>
+    <pd:endY>56</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
-    <pd:targetNamespace>http://xmlns.example.com/1384512620503</pd:targetNamespace>
+    <pd:targetNamespace>http://xmlns.example.com/1384530035702</pd:targetNamespace>
     <pd:activity name="Send HTTP Response">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>515</pd:x>
-        <pd:y>78</pd:y>
+        <pd:x>538</pd:x>
+        <pd:y>56</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -78,7 +77,7 @@
                             <xsl:value-of select="&quot;noOfUpdates&quot;"/>
                         </Name>
                         <Value>
-                            <xsl:value-of select="string($COUNT-INSERT/jdbcUpdateActivityOutput/noOfUpdates)"/>
+                            <xsl:value-of select="string($TRACE-INSERT/jdbcUpdateActivityOutput/noOfUpdates)"/>
                         </Value>
                     </Header>
                 </DynamicHeaders>
@@ -88,47 +87,73 @@
     <pd:activity name="Parse JSON">
         <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
         <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
-        <pd:x>190</pd:x>
-        <pd:y>78</pd:y>
+        <pd:x>202</pd:x>
+        <pd:y>51</pd:y>
         <config>
             <SchemaType>xsdType</SchemaType>
             <BadgerfishCheck>false</BadgerfishCheck>
             <ActivityOutputEditor ref="pfx3:data"/>
         </config>
         <pd:inputBindings>
-            <ns1:ActivityInputClass>
+            <ns1:ActivityInputClass xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/json">
                 <jsonString>
-                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
+                    <xsl:value-of xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
                 </jsonString>
             </ns1:ActivityInputClass>
         </pd:inputBindings>
     </pd:activity>
-    <pd:activity name="COUNT INSERT">
+    <pd:activity name="TRACE INSERT">
         <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
-        <pd:x>345</pd:x>
-        <pd:y>78</pd:y>
+        <pd:x>343</pd:x>
+        <pd:y>52</pd:y>
         <config>
             <timeout>10</timeout>
             <commit>false</commit>
             <emptyStrAsNil>false</emptyStrAsNil>
-            <statement>INSERT INTO count
-(COUNT)
-VALUES
-( '1')</statement>
             <jdbcSharedConfig>/SharedResources/JDBCConnection.sharedjdbc</jdbcSharedConfig>
+            <statement>INSERT INTO trace
+(CLIENT_NAME, CLIENT_THREAD_NAME, SERVER_THREAD_NAME, MESSAGE)
+VALUES
+(?,?,?,?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>CLIENT_NAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>CLIENT_THREAD_NAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>SERVER_THREAD_NAME</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>MESSAGE</parameterName>
+                    <dataType>LONGNVARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
         </config>
         <pd:inputBindings>
-            <jdbcUpdateActivityInput/>
+            <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="$Parse-JSON/ns:ActivityOutputClass/data">
+                <jdbcUpdateActivityInput>
+                    <CLIENT_NAME>
+                        <xsl:value-of select="clientName"/>
+                    </CLIENT_NAME>
+                    <CLIENT_THREAD_NAME>
+                        <xsl:value-of select="clientThreadName"/>
+                    </CLIENT_THREAD_NAME>
+                    <SERVER_THREAD_NAME>
+                        <xsl:value-of select="serverThreadName"/>
+                    </SERVER_THREAD_NAME>
+                    <MESSAGE>
+                        <xsl:value-of select="message"/>
+                    </MESSAGE>
+                </jdbcUpdateActivityInput>
+            </xsl:for-each>
         </pd:inputBindings>
     </pd:activity>
-    <pd:transition>
-        <pd:from>Send HTTP Response</pd:from>
-        <pd:to>End</pd:to>
-        <pd:lineType>Default</pd:lineType>
-        <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
         <pd:to>Parse JSON</pd:to>
@@ -137,14 +162,21 @@ VALUES
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>Parse JSON</pd:from>
-        <pd:to>COUNT INSERT</pd:to>
+        <pd:from>Send HTTP Response</pd:from>
+        <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>COUNT INSERT</pd:from>
+        <pd:from>Parse JSON</pd:from>
+        <pd:to>TRACE INSERT</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>TRACE INSERT</pd:from>
         <pd:to>Send HTTP Response</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>

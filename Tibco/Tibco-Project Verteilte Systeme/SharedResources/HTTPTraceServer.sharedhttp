@@ -40,6 +40,6 @@
                 <PropertyDefaultValue>60000</PropertyDefaultValue>
             </row>
         </HttpConnectionProperties>
-        <Port>8080</Port>
+        <Port>8882</Port>
     </config>
 </ns0:httpSharedResource>
