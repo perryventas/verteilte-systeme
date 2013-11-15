@@ -1,4 +1,4 @@
-package edu.hm.dako.echo.admin;
+package edu.hm.dako.echo.admin.old;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.DefaultComponentFactory;

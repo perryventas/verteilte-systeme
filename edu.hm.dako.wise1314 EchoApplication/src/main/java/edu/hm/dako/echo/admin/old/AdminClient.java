@@ -1,4 +1,4 @@
-package edu.hm.dako.echo.admin;
+package edu.hm.dako.echo.admin.old;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
