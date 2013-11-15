@@ -22,6 +22,8 @@ public class EchoPDU implements Serializable {
     								 // Zeit wird vom Server vor dem Absenden der Response eingetragen.
     private long clientTime;
     private int messageNumber;
+    
+    private String errorMessage;
 
     public EchoPDU() {
         clientName = null;
@@ -32,6 +34,7 @@ public class EchoPDU implements Serializable {
         clientTime = System.nanoTime();
         messageNumber = 0;
         lastRequest = false;
+        errorMessage = null;
     }
 
     public static EchoPDU createServerEchoPDU(EchoPDU receivedPdu, long startTime) {

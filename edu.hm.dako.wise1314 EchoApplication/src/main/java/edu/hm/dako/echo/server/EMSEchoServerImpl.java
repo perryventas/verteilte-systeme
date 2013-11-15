@@ -2,9 +2,13 @@ package edu.hm.dako.echo.server;
 
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 import com.tibco.tibjms.TibjmsTopicConnectionFactory;
+
 import edu.hm.dako.echo.common.EchoPDU;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
@@ -17,11 +21,12 @@ import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
 
-public class EMSEchoServerImpl implements EchoServer {
+public class EMSEchoServerImpl implements EchoServer, MessageListener {
 
     private static Log log = LogFactory.getLog(EMSEchoServerImpl.class);
 
@@ -46,8 +51,11 @@ public class EMSEchoServerImpl implements EchoServer {
     private TopicConnection tConnection = null;
     private TopicSession tSession = null;
     private TopicPublisher publisher = null;
+    private MessageConsumer consumer = null;
     private Topic dbtatopic = null;
+    private Topic dbtaacktopic = null;
     private final String dbTaTopicName = "dev.dbtatopic";
+    private final String dbTaAckTopicName = "dev.dbtaacktopic";
     
     private Boolean connectToEms() {
 
@@ -71,9 +79,15 @@ public class EMSEchoServerImpl implements EchoServer {
                 this.dbtatopic = tSession.createTopic(dbTaTopicName);
                 this.publisher = tSession.createPublisher(dbtatopic);
                 
+                this.dbtaacktopic = tSession.createTopic(dbTaAckTopicName);
+                this.consumer = tSession.createConsumer(dbtaacktopic);
+                this.consumer.setMessageListener(this);
+                
                 this.producer = session.createProducer(responseQueue);
                 this.receiver = session.createReceiver(requestQueue);
+                
                 this.connection.start();
+                this.tConnection.start();
             } catch (JMSException e) {
                 System.out.println("Error");
                 return false;
@@ -82,8 +96,23 @@ public class EMSEchoServerImpl implements EchoServer {
         }
         return true;
     }
+    
+    
 
     @Override
+	public void onMessage(Message message) {
+    	
+    	log.debug("response");
+    	
+		try {
+			this.producer.send(message);
+		} catch (JMSException e) {
+			log.error(e.toString());
+		}   	
+	}
+    
+
+	@Override
     public void start() {
         PropertyConfigurator.configureAndWatch("log4j.server.properties", 60 * 1000);
         System.out.println("EMS-Echo-Server wartet auf requests...");
@@ -163,21 +192,8 @@ public class EMSEchoServerImpl implements EchoServer {
             EchoPDU pdu = EchoPDU.createServerEchoPDU(receivedPdu, startTime);
             ObjectMessage emsObj = this.sess.createObjectMessage(pdu);
            
+            /* Publish PDU for the DTC. */
             pub.send(emsObj);
-            
-            /*
-            TextMessage traceMsg = 
-                    EMSEchoServerUtility.createTraceJsonMessage(receivedPdu, pdu,
-                                                                this.tSession);
-            if ( traceMsg != null )
-            {
-                log.debug("publishing transaction msg");
-                pub.send(traceMsg);
-            }
-           
-            log.debug("response");
-            */
-            prod.send(emsObj);
             
         }
 
