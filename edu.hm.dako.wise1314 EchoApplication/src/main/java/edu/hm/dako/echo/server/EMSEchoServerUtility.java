@@ -30,7 +30,7 @@ public class EMSEchoServerUtility {
         data.put("clientTime", receivedPdu.getClientTime());
         data.put("message", receivedPdu.getMessage()); 
         data.put("clientName", receivedPdu.getClientName()); 
-        data.put("serverThreadName", currentPdu.getServerThreadName()); //current thread = the right one????
+        data.put("serverThreadName", currentPdu.getServerThreadName());
             
         root.put("data", data);
         

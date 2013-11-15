@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 
+import edu.hm.dako.echo.common.CONSTANTS;
 import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.connection.Connection;
 

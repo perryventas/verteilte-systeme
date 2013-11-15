@@ -12,19 +12,16 @@ import edu.hm.dako.echo.common.EchoPDU;
 
 public class RestInterface {
 	
-	private static final String countServerUrl = "http://localhost:8881";
-	private static final String traceServerUrl = "http://localhost:8882";
-	
 	public enum RESULT {
 	  OK, ERROR
 	}
 	
-	public static RESULT notifyCountServer(EchoPDU receivedPdu) {
+	public static RESULT notifyServer(EchoPDU receivedPdu, String serverUrl) {
 		try {
 					
 			String body = createJsonMessage(receivedPdu);
 		
-			URL url = new URL( countServerUrl );
+			URL url = new URL( serverUrl );
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod( "POST" );
 			connection.setDoInput( true );
@@ -50,38 +47,7 @@ public class RestInterface {
 			return RESULT.ERROR;
 		}
 	}
-	
-	public static RESULT notifyTraceServer(EchoPDU receivedPdu) {
-		try {
-					
-			String body = createJsonMessage(receivedPdu);
-		
-			URL url = new URL( traceServerUrl );
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod( "POST" );
-			connection.setDoInput( true );
-			connection.setDoOutput( true );
-			connection.setUseCaches( false );
-			connection.setRequestProperty( "Content-Type",
-			                               "application/json" );
-			connection.setRequestProperty( "Content-Length", String.valueOf(body.length()));
-			
-			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-			writer.write( body );
-			writer.flush();		
-		
-			BufferedReader reader = new BufferedReader(
-		                          		new InputStreamReader(connection.getInputStream()) );
-		
-			writer.close();
-			reader.close();
-			
-			return RESULT.OK;
-			
-		} catch(Exception e) {
-			return RESULT.ERROR;
-		}
-	}
+
 	
 	@SuppressWarnings("unchecked")
 	private static String createJsonMessage( EchoPDU receivedPdu )
@@ -98,7 +64,7 @@ public class RestInterface {
         data.put("clientTime", receivedPdu.getClientTime());
         data.put("message", receivedPdu.getMessage()); 
         data.put("clientName", receivedPdu.getClientName()); 
-        data.put("serverThreadName", receivedPdu.getServerThreadName()); //current thread = the right one????
+        data.put("serverThreadName", receivedPdu.getServerThreadName());
             
         root.put("data", data);
         

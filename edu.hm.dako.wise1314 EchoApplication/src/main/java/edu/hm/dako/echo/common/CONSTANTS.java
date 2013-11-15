@@ -1,4 +1,4 @@
-package edu.hm.dako.echo.connection.ems;
+package edu.hm.dako.echo.common;
 
 public class CONSTANTS {
 
@@ -17,6 +17,9 @@ public class CONSTANTS {
     
     //DB
     public static final String DB_HOST = "5.9.75.108";
+    
+    public static final String COUNT_SERVER_URL = "http://localhost:8881";
+    public static final String TRACE_SERVER_URL = "http://localhost:8882";
     
     public static final String DB_USER_NAME = "root";
     public static final String DB_PASSWORD = "zwetschgenmandl";

@@ -17,6 +17,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.tibco.tibjms.TibjmsTopicConnectionFactory;
 
+import edu.hm.dako.echo.common.CONSTANTS;
 import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.dtc.RestInterface.RESULT;
 
@@ -26,8 +27,8 @@ public class TransactionCoordinator implements MessageListener {
 
 	private Boolean isConnected = false;
 	
-	private final String userName = "dev";
-	private final String password = "dev";
+	private final String userName = CONSTANTS.USER_NAME;
+	private final String password = CONSTANTS.PASSWORD;
 
 	
 	private TopicConnection tConnection = null;
@@ -39,12 +40,12 @@ public class TransactionCoordinator implements MessageListener {
 	private Topic dbtatopic = null;
 	private Topic dbtatopicOne = null;
 	
-	private final String dbTaTopicName = "dev.dbtatopic";
-	private final String dbTaAckTopicName = "dev.dbtaacktopic";
+	private final String dbTaTopicName = CONSTANTS.DB_TA_TOPIC_NAME;
+	private final String dbTaAckTopicName = CONSTANTS.DB_TA_ACK_TOPIC_NAME;
 	    
     public TransactionCoordinator() {
 
-        String serverUrl = "tcp://moguai.org:7222";
+        String serverUrl = CONSTANTS.SERVER_URL;
         
         TibjmsTopicConnectionFactory topicFactory =
                 new TibjmsTopicConnectionFactory(serverUrl);
@@ -125,11 +126,11 @@ public class TransactionCoordinator implements MessageListener {
     	{
 	    	case COUNT:
 	    		log.debug("notifying COUNT server...");
-				res = RestInterface.notifyCountServer(pdu);
+				res = RestInterface.notifyServer(pdu, CONSTANTS.COUNT_SERVER_URL);
 	    		break;
 	    	case TRACE:
 	    		log.debug("notifying TRACE server...");
-	    		res = RestInterface.notifyTraceServer(pdu);
+	    		res = RestInterface.notifyServer(pdu, CONSTANTS.TRACE_SERVER_URL);
 	    		break;
     	}
     	

@@ -3,6 +3,7 @@ package edu.hm.dako.echo.server;
 import com.tibco.tibjms.TibjmsQueueConnectionFactory;
 import com.tibco.tibjms.TibjmsTopicConnectionFactory;
 
+import edu.hm.dako.echo.common.CONSTANTS;
 import edu.hm.dako.echo.common.EchoPDU;
 
 import javax.jms.JMSException;
@@ -16,7 +17,6 @@ import javax.jms.QueueConnection;
 import javax.jms.QueueReceiver;
 import javax.jms.QueueSession;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicPublisher;
@@ -41,11 +41,11 @@ public class EMSEchoServerImpl implements EchoServer, MessageListener {
     private QueueReceiver receiver = null;
     private Queue responseQueue = null;
 
-    private final String userName = "dev";
-    private final String password = "dev";
+    private final String userName = CONSTANTS.USER_NAME;
+    private final String password = CONSTANTS.PASSWORD;
 
-    private final String requestQueueName = "dev.request";
-    private final String responseQueueName = "dev.response";
+    private final String requestQueueName = CONSTANTS.REQUEST_QUEUE_NAME;
+    private final String responseQueueName = CONSTANTS.RESPONSE_QUEUE_NAME;
 
     /* Topic part. */
     private TopicConnection tConnection = null;
@@ -54,12 +54,12 @@ public class EMSEchoServerImpl implements EchoServer, MessageListener {
     private MessageConsumer consumer = null;
     private Topic dbtatopic = null;
     private Topic dbtaacktopic = null;
-    private final String dbTaTopicName = "dev.dbtatopic";
-    private final String dbTaAckTopicName = "dev.dbtaacktopic";
+    private final String dbTaTopicName = CONSTANTS.DB_TA_TOPIC_NAME;
+    private final String dbTaAckTopicName = CONSTANTS.DB_TA_ACK_TOPIC_NAME;
     
     private Boolean connectToEms() {
 
-        String serverUrl = "tcp://moguai.org:7222";
+        String serverUrl = CONSTANTS.SERVER_URL;
 
         TibjmsQueueConnectionFactory queueFactory = 
                 new TibjmsQueueConnectionFactory(serverUrl);

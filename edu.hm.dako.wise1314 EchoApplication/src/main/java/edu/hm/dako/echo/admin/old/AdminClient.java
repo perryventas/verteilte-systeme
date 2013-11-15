@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import edu.hm.dako.echo.connection.ems.CONSTANTS;
+import edu.hm.dako.echo.common.CONSTANTS;
 
 /**
  * @author Christoph Friegel

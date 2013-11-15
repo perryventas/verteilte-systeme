@@ -1,11 +1,11 @@
 package edu.hm.dako.echo.client;
 
+import edu.hm.dako.echo.common.CONSTANTS;
 import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.common.ExceptionHandler;
 import edu.hm.dako.echo.common.SharedClientStatistics;
 import edu.hm.dako.echo.connection.Connection;
 import edu.hm.dako.echo.connection.ConnectionFactory;
-import edu.hm.dako.echo.connection.ems.CONSTANTS;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

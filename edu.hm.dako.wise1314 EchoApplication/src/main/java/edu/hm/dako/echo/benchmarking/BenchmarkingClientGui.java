@@ -88,10 +88,10 @@ public class BenchmarkingClientGui extends JPanel
          * Erzeugen der GUI-Komponenten
          */
         String[] optionStrings = {
-                SINGLE_THREADED_TCP,
-                MULTI_THREADED_TCP,
                 EMS_SINGLE_THREADED_TCP,
-                EMS_MULTI_THREADED_TCP};
+                EMS_MULTI_THREADED_TCP,
+                SINGLE_THREADED_TCP,
+                MULTI_THREADED_TCP};
         optionList1 = new JComboBox(optionStrings);
 
         String[] optionStrings1 = {
@@ -189,12 +189,12 @@ public class BenchmarkingClientGui extends JPanel
         panel.add(optionList1, cc.xyw(3, 3, 1));
         panel.add(new JLabel("Anzahl Client-Threads"), cc.xy(5, 3));
         panel.add(one, cc.xy(7, 3));
-        one.setText("10");
+        one.setText("1");
         panel.add(new JLabel("Art der Messung"), cc.xy(1, 5));
         panel.add(optionList2, cc.xyw(3, 5, 1));
         panel.add(new JLabel("Anzahl Nachrichten je Client"), cc.xy(5, 5));
         panel.add(text3, cc.xy(7, 5));
-        text3.setText("100");
+        text3.setText("50");
         panel.add(new JLabel("Serverport"), cc.xy(1, 7));
         panel.add(text4, cc.xy(3, 7));
         text4.setText("7222");
@@ -369,10 +369,10 @@ public class BenchmarkingClientGui extends JPanel
            * Loeschen bzw. initialisieren aller Ergebnisfelder
            */
         text.setText("");
-        one.setText("10"); //  Anzahl Clients
+        one.setText("1"); //  Anzahl Clients
         text1.setText("");
         text2.setText("");
-        text3.setText("100"); // Anzahl Nachrichten je Client
+        text3.setText("50"); // Anzahl Nachrichten je Client
         text4.setText("7222"); // Serverport;
         text5.setText("100"); // Denkzeit
         text6.setText("moguai.org"); // IP-Adresse des Servers
