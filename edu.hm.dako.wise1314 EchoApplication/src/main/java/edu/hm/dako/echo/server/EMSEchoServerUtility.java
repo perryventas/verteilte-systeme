@@ -14,7 +14,8 @@ import org.json.simple.JSONObject;
  */
 public class EMSEchoServerUtility {
 
-    public static TextMessage createTraceJsonMessage( EchoPDU receivedPdu, EchoPDU currentPdu, 
+    @SuppressWarnings("unchecked")
+	public static TextMessage createTraceJsonMessage( EchoPDU receivedPdu, EchoPDU currentPdu, 
                                                       TopicSession ts ) throws JMSException
     {
         if ( receivedPdu == null )

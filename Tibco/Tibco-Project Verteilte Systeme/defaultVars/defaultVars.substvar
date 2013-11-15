@@ -58,6 +58,22 @@
 			<modTime>1383240089224</modTime>
 		</globalVariable>
 		<globalVariable>
+			<name>MachineName</name>
+			<value>localhost</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1384513553354</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>MachinePort</name>
+			<value>9090</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1384513553361</modTime>
+		</globalVariable>
+		<globalVariable>
 			<name>RemoteRvDaemon</name>
 			<value></value>
 			<deploymentSettable>true</deploymentSettable>

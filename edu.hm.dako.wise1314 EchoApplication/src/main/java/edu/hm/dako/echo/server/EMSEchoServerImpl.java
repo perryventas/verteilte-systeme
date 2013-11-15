@@ -163,6 +163,9 @@ public class EMSEchoServerImpl implements EchoServer {
             EchoPDU pdu = EchoPDU.createServerEchoPDU(receivedPdu, startTime);
             ObjectMessage emsObj = this.sess.createObjectMessage(pdu);
            
+            pub.send(emsObj);
+            
+            /*
             TextMessage traceMsg = 
                     EMSEchoServerUtility.createTraceJsonMessage(receivedPdu, pdu,
                                                                 this.tSession);
@@ -173,7 +176,9 @@ public class EMSEchoServerImpl implements EchoServer {
             }
            
             log.debug("response");
+            */
             prod.send(emsObj);
+            
         }
 
         private void closeConnection() {

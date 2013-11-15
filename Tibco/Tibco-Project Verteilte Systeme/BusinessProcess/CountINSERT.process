@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:pfx5="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/JSONSchema_DATA/Schema_data.xsd" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/tibco-project-Max/BusinessProcess/EMS_JMS/JSONSchema_DATA/Schema_data.xsd" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" xmlns:pfx="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd">
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:pfx="http://www.tibco.com/schemas/tibco-project/JSONSchema/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:ns1="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:ns4="http://www.tibco.com/pe/SignalInActivitySchema" xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:pfx5="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx4="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/JSONSchema_DATA/Schema_data.xsd" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/tibco-project-Max/BusinessProcess/EMS_JMS/JSONSchema_DATA/Schema_data.xsd" xmlns:pfx2="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd">
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/JSONSchema/Schema_data.xsd" schemaLocation="/JSONSchema/Schema_data.xsd"/>
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd" schemaLocation="/Tibco-Project Verteilte Systeme/BusinessProcess/Schema_data.xsd"/>
-    <pd:name>Tibco-Project Verteilte Systeme/BusinessProcess/CountINSERT.process</pd:name>
+    <pd:name>BusinessProcess/CountINSERT.process</pd:name>
     <pd:startName>JMS Topic Subscriber</pd:startName>
     <pd:startX>0</pd:startX>
     <pd:startY>0</pd:startY>
@@ -10,8 +10,8 @@
     <pd:starter name="JMS Topic Subscriber">
         <pd:type>com.tibco.plugin.jms.JMSTopicEventSource</pd:type>
         <pd:resourceType>ae.activities.JMSTopicEventSource</pd:resourceType>
-        <pd:x>78</pd:x>
-        <pd:y>170</pd:y>
+        <pd:x>300</pd:x>
+        <pd:y>169</pd:y>
         <config>
             <PermittedMessageType>Text</PermittedMessageType>
             <SessionAttributes>
@@ -32,16 +32,16 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>512</pd:endX>
-    <pd:endY>163</pd:endY>
+    <pd:endX>734</pd:endX>
+    <pd:endY>162</pd:endY>
     <pd:errorSchemas/>
     <pd:processVariables/>
     <pd:targetNamespace>http://xmlns.example.com/1383318881352</pd:targetNamespace>
     <pd:activity name="Log">
         <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
         <pd:resourceType>ae.activities.log</pd:resourceType>
-        <pd:x>389</pd:x>
-        <pd:y>249</pd:y>
+        <pd:x>611</pd:x>
+        <pd:y>248</pd:y>
         <config>
             <role>User</role>
         </config>
@@ -58,8 +58,8 @@
     <pd:activity name="Parse-JSON-1">
         <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
         <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
-        <pd:x>229</pd:x>
-        <pd:y>162</pd:y>
+        <pd:x>451</pd:x>
+        <pd:y>161</pd:y>
         <config>
             <SchemaType>xsdType</SchemaType>
             <BadgerfishCheck>true</BadgerfishCheck>
@@ -76,8 +76,8 @@
     <pd:activity name="COUNT INSERT">
         <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
         <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
-        <pd:x>377</pd:x>
-        <pd:y>77</pd:y>
+        <pd:x>599</pd:x>
+        <pd:y>76</pd:y>
         <config>
             <timeout>10</timeout>
             <commit>false</commit>

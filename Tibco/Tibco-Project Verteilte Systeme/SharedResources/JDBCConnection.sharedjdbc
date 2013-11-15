@@ -5,7 +5,7 @@
     <config>
         <driver>com.mysql.jdbc.Driver</driver>
         <maxConnections>10</maxConnections>
-        <loginTimeout>0</loginTimeout>
+        <loginTimeout/>
         <connectionType>JDBC</connectionType>
         <UseSharedJndiConfig>false</UseSharedJndiConfig>
         <location>jdbc:mysql://5.9.75.108:3306/tibco</location>

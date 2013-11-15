@@ -39,7 +39,7 @@ public final class ServerFactory {
             case EMSSingleThreaded:
                 return new EMSEchoServerImpl();
 
-             // Weitere Implementierungen hier einbauen 
+             /* Weitere Implementierungen hier einbauen */
             default:
                 throw new RuntimeException("Unknown type: " + type);
         }
