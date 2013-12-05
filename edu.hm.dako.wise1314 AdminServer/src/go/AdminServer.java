@@ -10,9 +10,9 @@ import com.sun.net.httpserver.HttpServer;
 
 public class AdminServer {
 
-	  public static void main(String[] args) throws Exception {
-			HttpServer server = HttpServerFactory.create( CONSTANTS.WS_AS_HOST );
-			server.start();
-			//never ending ;)
-	  }
+	public static void main(String[] args) throws Exception {
+		HttpServer server = HttpServerFactory.create(CONSTANTS.WS_AS_HOST);
+		server.start();
+		// never ending ;)
+	}
 }

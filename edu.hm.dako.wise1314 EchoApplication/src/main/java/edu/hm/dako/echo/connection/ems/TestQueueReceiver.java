@@ -4,19 +4,25 @@ package edu.hm.dako.echo.connection.ems;
  * @author Christoph Friegel
  * @version 1.0
  */
-public class TestQueueReceiver extends TestEMSUnit {
-	
-	tibjmsQueueReceiver monitor;
+public class TestQueueReceiver extends TestEMSUnit
+{
 
-	public void test() {
-		try {
-            tibjmsQueueReceiver t = new tibjmsQueueReceiver(serverUrl, userName, password, queueName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  tibjmsQueueReceiver monitor;
 
-	public static void main(String[] args) {
-		new TestQueueReceiver().test();
-	}
+  public void test()
+  {
+    try
+    {
+      new tibjmsQueueReceiver( serverUrl, userName, password, queueName );
+    }
+    catch ( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public static void main( String[] args )
+  {
+    new TestQueueReceiver().test();
+  }
 }
