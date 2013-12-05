@@ -34,13 +34,13 @@ public final class ClientFactory {
                             sharedData, getDecoratedFactory(new TcpConnectionFactory()));
                 
                 case EMSSingleThreaded:
-                    return new ConnectionReusingClient(param.getRemoteServerPort(),
+                    return new EMSNewConnectionClient(param.getRemoteServerPort(),
                             param.getRemoteServerAddress(), numberOfClient, param.getMessageLength(),
                             param.getNumberOfMessages(), param.getClientThinkTime(),
                             sharedData, getDecoratedFactory(new EMSConnectionFactory()));
                     
                 case EMSMultiThreaded:
-                    return new NewConnectionClient(param.getRemoteServerPort(),
+                    return new EMSConnectionReusingClient(param.getRemoteServerPort(),
                             param.getRemoteServerAddress(), numberOfClient, param.getMessageLength(),
                             param.getNumberOfMessages(), param.getClientThinkTime(),
                             sharedData, getDecoratedFactory(new EMSConnectionFactory()));
