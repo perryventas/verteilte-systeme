@@ -72,7 +72,7 @@ public final class ClientFactory
     return new DecoratingConnectionFactory( connectionFactory );
   }
 
-  public static EMSEchoReciever checkConnection(
+  public static EMSEchoReceiver checkConnection(
       UserInterfaceInputParameters param, SharedClientStatistics sharedData )
   {
     try
@@ -86,12 +86,12 @@ public final class ClientFactory
           return null;
 
         case EMSSingleThreaded:
-          return new EMSEchoReciever( param.getRemoteServerPort(),
+          return new EMSEchoReceiver( param.getRemoteServerPort(),
               param.getRemoteServerAddress(), sharedData,
               param.getNumberOfClients() );
 
         case EMSMultiThreaded:
-          return new EMSEchoReciever( param.getRemoteServerPort(),
+          return new EMSEchoReceiver( param.getRemoteServerPort(),
               param.getRemoteServerAddress(), sharedData,
               param.getNumberOfClients() );
 

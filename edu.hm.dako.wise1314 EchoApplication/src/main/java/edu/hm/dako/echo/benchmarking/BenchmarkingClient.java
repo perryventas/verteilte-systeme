@@ -9,7 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import edu.hm.dako.echo.client.ClientFactory;
-import edu.hm.dako.echo.client.EMSEchoReciever;
+import edu.hm.dako.echo.client.EMSEchoReceiver;
 import edu.hm.dako.echo.common.CpuUtilisationWatch;
 import edu.hm.dako.echo.common.SharedClientStatistics;
 
@@ -76,8 +76,7 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     /**
      * ResponseQueueReciever starten
      */
-
-    EMSEchoReciever emsQueue = ClientFactory.checkConnection( parm, sharedData );
+    EMSEchoReceiver emsQueue = ClientFactory.checkConnection( parm, sharedData );
 
     /**
      * Client-Threads in Abhaengigkeit des Implementierungstyps instanziieren
@@ -107,8 +106,7 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     if ( emsQueue != null )
     {
       // wait until we got all messages
-      while ( numberOfAllMessages > sharedData.getNumberOfReceivedResponses() )
-        ;
+      while ( !sharedData.allMessagesReceived() );
     }
     executorService.shutdown();
 

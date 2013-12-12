@@ -20,9 +20,9 @@ import edu.hm.dako.echo.common.CONSTANTS;
 import edu.hm.dako.echo.common.EchoPDU;
 import edu.hm.dako.echo.common.SharedClientStatistics;
 
-public class EMSEchoReciever implements ExceptionListener, MessageListener
+public class EMSEchoReceiver implements ExceptionListener, MessageListener
 {
-  private static Log log = LogFactory.getLog( EMSEchoReciever.class );
+  private static Log log = LogFactory.getLog( EMSEchoReceiver.class );
 
   private Session session;
   private MessageConsumer msgConsumer = null;
@@ -35,7 +35,7 @@ public class EMSEchoReciever implements ExceptionListener, MessageListener
   private SharedClientStatistics sharedData;
   private int clientNumber;
 
-  public EMSEchoReciever( int serverPort, String remoteServerAddress,
+  public EMSEchoReceiver( int serverPort, String remoteServerAddress,
       SharedClientStatistics sharedData, int clientNumber )
   {
     this.clientNumber = clientNumber;
@@ -60,6 +60,7 @@ public class EMSEchoReciever implements ExceptionListener, MessageListener
       session = connection2.createSession();
       connection2.setExceptionListener( this );
       destination = session.createQueue( this.responseQueueName );
+      log.debug( "Echo-Receiver started.");
       log.debug( "Subscribing to destination: " + this.responseQueueName );
     }
     catch ( JMSException e1 )
@@ -75,6 +76,7 @@ public class EMSEchoReciever implements ExceptionListener, MessageListener
       msgConsumer = session.createConsumer( destination );
       msgConsumer.setMessageListener( this );
       connection2.start();
+      log.debug( "Message-Consumer started.");
     }
     catch ( Exception e )
     {
@@ -88,10 +90,12 @@ public class EMSEchoReciever implements ExceptionListener, MessageListener
   {
     try
     {
-      log.debug( "Received message: " + msg );
+      log.debug( "Received message, ObjectMessage: " + msg );
 
       ObjectMessage objMsg = (ObjectMessage) msg;
       EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();
+      
+      log.debug( "Received message, ClientThread: " + receivedPdu.getClientThreadName() + ", ID: " + receivedPdu.getMessageNumber()  );
 
       long rtt = System.nanoTime() - receivedPdu.getClientTime();
 
@@ -100,6 +104,8 @@ public class EMSEchoReciever implements ExceptionListener, MessageListener
     catch ( Exception e )
     {
       log.debug( "Unexpected exception in the message callback!" );
+      log.debug( sharedData.allMessagesReceived() );
+      log.debug( sharedData.getNumberOfSentRequests() + " == " + (sharedData.getNumberOfReceivedResponses()+1) );
     }
   }
 
