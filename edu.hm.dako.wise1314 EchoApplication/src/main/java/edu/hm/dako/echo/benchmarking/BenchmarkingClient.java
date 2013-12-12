@@ -1,15 +1,17 @@
 package edu.hm.dako.echo.benchmarking;
 
-import edu.hm.dako.echo.client.ClientFactory;
-import edu.hm.dako.echo.common.CpuUtilisationWatch;
-import edu.hm.dako.echo.common.SharedClientStatistics;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import edu.hm.dako.echo.client.ClientFactory;
+import edu.hm.dako.echo.client.EMSEchoReciever;
+import edu.hm.dako.echo.common.CpuUtilisationWatch;
+import edu.hm.dako.echo.common.SharedClientStatistics;
 
 /**
  * Klasse BenchmarkingClient Basisklasse zum Starten eines Benchmarks
@@ -58,7 +60,6 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     /**
      * Startzeit ermitteln
      */
-
     long startTime = 0;
     Calendar cal = Calendar.getInstance();
     startTime = cal.getTimeInMillis();
@@ -67,11 +68,16 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     /**
      * Laufzeitzaehler-Thread erzeugen
      */
-
     TimeCounterThread timeCounterThread = new TimeCounterThread( clientGui );
     timeCounterThread.start();
 
     cpuUtilisationWatch = new CpuUtilisationWatch();
+
+    /**
+     * ResponseQueueReciever starten
+     */
+
+    EMSEchoReciever emsQueue = ClientFactory.checkConnection( parm, sharedData );
 
     /**
      * Client-Threads in Abhaengigkeit des Implementierungstyps instanziieren
@@ -87,7 +93,6 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     /**
      * Startwerte anzeigen
      */
-
     UserInterfaceStartData startData = new UserInterfaceStartData();
     startData.setNumberOfRequests( numberOfAllMessages );
     startData.setStartTime( getCurrentTime( cal ) );
@@ -99,6 +104,12 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     /**
      * Auf das Ende aller Clients warten
      */
+    if ( emsQueue != null )
+    {
+      // wait until we got all messages
+      while ( numberOfAllMessages > sharedData.getNumberOfReceivedResponses() )
+        ;
+    }
     executorService.shutdown();
 
     try

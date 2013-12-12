@@ -71,4 +71,38 @@ public final class ClientFactory
   {
     return new DecoratingConnectionFactory( connectionFactory );
   }
+
+  public static EMSEchoReciever checkConnection(
+      UserInterfaceInputParameters param, SharedClientStatistics sharedData )
+  {
+    try
+    {
+      switch ( param.getImplementationType() )
+      {
+        case TCPSingleThreaded:
+          return null;
+
+        case TCPMultiThreaded:
+          return null;
+
+        case EMSSingleThreaded:
+          return new EMSEchoReciever( param.getRemoteServerPort(),
+              param.getRemoteServerAddress(), sharedData,
+              param.getNumberOfClients() );
+
+        case EMSMultiThreaded:
+          return new EMSEchoReciever( param.getRemoteServerPort(),
+              param.getRemoteServerAddress(), sharedData,
+              param.getNumberOfClients() );
+
+        default:
+          throw new RuntimeException( "Unknown type: "
+              + param.getImplementationType() );
+      }
+    }
+    catch ( Exception e )
+    {
+      throw new RuntimeException( e );
+    }
+  }
 }
