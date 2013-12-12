@@ -111,7 +111,6 @@ public class DefaultEchoServerImpl implements EchoServer
 
     private void echo() throws Exception
     {
-
       EchoPDU receivedPdu = (EchoPDU) con.receive();
       startTime = System.nanoTime();
       con.send( EchoPDU.createServerEchoPDU( receivedPdu, startTime ) );

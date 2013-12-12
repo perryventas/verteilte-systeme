@@ -43,7 +43,7 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
     this.serverUrl = "tcp://" + remoteServerAddress + ":" + serverPort;
     PropertyConfigurator.configureAndWatch( "log4j.client.properties",
         60 * 1000 );
-    log.debug("server: " + serverUrl);
+    log.debug( "server: " + serverUrl );
 
     connectToQueue();
 
@@ -60,7 +60,7 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
       session = connection2.createSession();
       connection2.setExceptionListener( this );
       destination = session.createQueue( this.responseQueueName );
-      log.debug( "Echo-Receiver started.");
+      log.debug( "Echo-Receiver started." );
       log.debug( "Subscribing to destination: " + this.responseQueueName );
     }
     catch ( JMSException e1 )
@@ -76,7 +76,7 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
       msgConsumer = session.createConsumer( destination );
       msgConsumer.setMessageListener( this );
       connection2.start();
-      log.debug( "Message-Consumer started.");
+      log.debug( "Message-Consumer started." );
     }
     catch ( Exception e )
     {
@@ -94,8 +94,10 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
 
       ObjectMessage objMsg = (ObjectMessage) msg;
       EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();
-      
-      log.debug( "Received message, ClientThread: " + receivedPdu.getClientThreadName() + ", ID: " + receivedPdu.getMessageNumber()  );
+
+      log.debug( "Received message, " + receivedPdu.getClientThreadName()
+          + ", Message# "
+          + +( receivedPdu.getMessageNumber() + 1 ) );
 
       long rtt = System.nanoTime() - receivedPdu.getClientTime();
 
@@ -104,8 +106,6 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
     catch ( Exception e )
     {
       log.debug( "Unexpected exception in the message callback!" );
-      log.debug( sharedData.allMessagesReceived() );
-      log.debug( sharedData.getNumberOfSentRequests() + " == " + (sharedData.getNumberOfReceivedResponses()+1) );
     }
   }
 

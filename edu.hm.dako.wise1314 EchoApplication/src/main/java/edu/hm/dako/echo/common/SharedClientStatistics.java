@@ -150,6 +150,7 @@ public class SharedClientStatistics
     if ( !inRange( i ) )
       return;
     clientStatistics[ i ].receivedResponses++;
+    
     clientStatistics[ i ].sumRTT = clientStatistics[ i ].sumRTT + rtt;
     clientStatistics[ i ].averageRTT = clientStatistics[ i ].sumRTT
         / clientStatistics[ i ].receivedResponses;

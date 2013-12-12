@@ -85,15 +85,16 @@ public final class ClientFactory
         case TCPMultiThreaded:
           return null;
 
+        //param.getNumberOfClients()-1 because array-id starts at 0
         case EMSSingleThreaded:
           return new EMSEchoReceiver( param.getRemoteServerPort(),
               param.getRemoteServerAddress(), sharedData,
-              param.getNumberOfClients() );
+              (param.getNumberOfClients()-1) );
 
         case EMSMultiThreaded:
           return new EMSEchoReceiver( param.getRemoteServerPort(),
               param.getRemoteServerAddress(), sharedData,
-              param.getNumberOfClients() );
+              (param.getNumberOfClients()-1) );
 
         default:
           throw new RuntimeException( "Unknown type: "

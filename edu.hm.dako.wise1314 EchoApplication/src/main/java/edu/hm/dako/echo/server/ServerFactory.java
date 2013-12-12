@@ -75,6 +75,7 @@ public final class ServerFactory
     getServer(
         UserInterfaceInputParameters.ImplementationType.EMSSingleThreaded )
         //UserInterfaceInputParameters.ImplementationType.TCPSingleThreaded )
+        //UserInterfaceInputParameters.ImplementationType.TCPMultiThreaded )
         .start();
   }
 
