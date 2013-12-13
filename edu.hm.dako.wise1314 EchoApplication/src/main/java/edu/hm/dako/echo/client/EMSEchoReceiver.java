@@ -130,6 +130,9 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
     sharedData.incrReceivedMsgCounter( clientNumber, rtt,
         receivedPdu.getServerTime() );
 
+    if ( receivedPdu.getErrorMessage() != null )
+      sharedData.setErrorNumber( clientNumber );
+
     log.debug( receivedPdu.getClientThreadName() + ": RTT fuer Request "
         + ( receivedPdu.getMessageNumber() + 1 ) + ": " + rtt + " ns" );
     log.debug( receivedPdu.getClientThreadName()

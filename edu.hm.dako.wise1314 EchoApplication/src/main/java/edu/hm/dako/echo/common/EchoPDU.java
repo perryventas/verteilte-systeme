@@ -28,7 +28,6 @@ public class EchoPDU implements Serializable
   private long clientTime;
   private int messageNumber;
 
-  @SuppressWarnings( "unused" )
   private String errorMessage;
 
   public EchoPDU()
@@ -102,6 +101,11 @@ public class EchoPDU implements Serializable
     this.messageNumber = mn;
   }
 
+  public void setErrorMessage( String em )
+  {
+    this.errorMessage = em;
+  }
+
   public String getClientName()
   {
     return ( clientName );
@@ -135,5 +139,10 @@ public class EchoPDU implements Serializable
   public int getMessageNumber()
   {
     return messageNumber;
+  }
+
+  public String getErrorMessage()
+  {
+    return errorMessage;
   }
 }

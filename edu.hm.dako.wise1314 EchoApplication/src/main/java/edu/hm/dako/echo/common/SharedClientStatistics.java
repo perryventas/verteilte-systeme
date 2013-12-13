@@ -56,6 +56,7 @@ public class SharedClientStatistics
     long sumServerTime; // Zeit, die der Server insgesamt fuer alle Requests
                         // benoetigt in ns
     long maxHeapSize; // Maximale Heap-Groesse in Bytes waehrend eines Testlaufs
+    int numberOfErrors; // Summe der Fehler
   }
 
   // Statistik-Tabelle fuer die empfangenen Respoonse-Nachrichten aller Clients
@@ -101,6 +102,7 @@ public class SharedClientStatistics
       clientStatistics[ i ].sumRTT = 0;
       clientStatistics[ i ].sumServerTime = 0;
       clientStatistics[ i ].maxHeapSize = 0;
+      clientStatistics[ i ].numberOfErrors = 0;
     }
   }
 
@@ -721,5 +723,35 @@ public class SharedClientStatistics
     Runtime r = Runtime.getRuntime();
     long usedMemory = ( r.totalMemory() - r.freeMemory() );
     return ( usedMemory );
+  }
+
+  /**
+   * Fehler ermitteln
+   * 
+   * @return number of errors
+   */
+  public int getErrorNumber()
+  {
+    int sum = 0;
+
+    for ( int i = 0; i < numberOfClients; i++ )
+    {
+      sum += clientStatistics[ i ].numberOfErrors;
+    }
+    return sum;
+  }
+
+  /**
+   * Anzahl der gesendeten Errors eines clients erhöhen
+   * 
+   * @param i
+   *          Client-Id
+   * 
+   */
+  public synchronized void setErrorNumber( int i )
+  {
+    if ( !inRange( i ) )
+      return;
+    clientStatistics[ i ].numberOfErrors++;
   }
 }

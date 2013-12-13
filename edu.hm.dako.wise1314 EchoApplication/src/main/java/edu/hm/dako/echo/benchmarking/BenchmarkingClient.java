@@ -141,9 +141,10 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
 
     UserInterfaceResultData resultData = getResultData( parm, startTime );
 
-    clientGui.showResultData( resultData );
     clientGui.setMessageLine( parm.mapImplementationTypeToString( parm
         .getImplementationType() ) + ": Benchmark beendet" );
+
+    clientGui.setMessageLine( getErrorResult() );
 
     /**
      * Datensatz fuer Benchmark-Lauf auf Protokolldatei schreiben
@@ -154,6 +155,16 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
         parm.mapMeasurementTypeToString( parm.getMeasurementType() ),
         startTimeAsString, resultData.getEndTime() );
 
+  }
+
+  private String getErrorResult()
+  {
+    String error = "DTC meldet: ";
+    if ( sharedData.getErrorNumber() == 0 )
+      error += "Keine";
+    else
+      error += sharedData.getErrorNumber();
+    return error + " Fehler entdeckt!";
   }
 
   private UserInterfaceResultData getResultData(
