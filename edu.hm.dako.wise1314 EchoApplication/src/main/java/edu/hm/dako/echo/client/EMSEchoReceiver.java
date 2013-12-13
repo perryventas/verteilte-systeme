@@ -33,12 +33,10 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
   private final String password = CONSTANTS.PASSWORD;
   private final String responseQueueName = CONSTANTS.RESPONSE_QUEUE_NAME;
   private SharedClientStatistics sharedData;
-  private int clientNumber;
 
   public EMSEchoReceiver( int serverPort, String remoteServerAddress,
       SharedClientStatistics sharedData, int clientNumber )
   {
-    this.clientNumber = clientNumber;
     this.sharedData = sharedData;
     this.serverUrl = "tcp://" + remoteServerAddress + ":" + serverPort;
     PropertyConfigurator.configureAndWatch( "log4j.client.properties",
@@ -96,12 +94,14 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
       EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();
 
       log.debug( "Received message, " + receivedPdu.getClientThreadName()
-          + ", Message# "
-          + +( receivedPdu.getMessageNumber() + 1 ) );
+          + ", Message# " + +( receivedPdu.getMessageNumber() + 1 ) );
 
       long rtt = System.nanoTime() - receivedPdu.getClientTime();
 
-      postReceive( receivedPdu.getMessageNumber(), receivedPdu, rtt );
+      // "Client-Thread-" + clientNumber
+      int clientNumber = Integer.parseInt( receivedPdu.getClientThreadName()
+          .substring( 14 ) );
+      postReceive( clientNumber, receivedPdu, rtt );
     }
     catch ( Exception e )
     {
@@ -109,25 +109,39 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
     }
   }
 
-  @Override
-  public void onException( JMSException e )
+  public void shutdown()
   {
-    log.debug( "CONNECTION EXCEPTION: " + e.getMessage() );
+    try
+    {
+      this.session.close();
+      this.connection2.close();
+    }
+    catch ( JMSException e )
+    {
+      log.debug( "CONNECTION EXCEPTION: " + e.getMessage() );
+    }
   }
 
   // same function like the one in AbstractClient
-  protected final void postReceive( int i, EchoPDU receivedPdu, long rtt )
+  protected final void postReceive( int clientNumber, EchoPDU receivedPdu,
+      long rtt )
   {
     // Response-Zaehler erhoehen
     sharedData.incrReceivedMsgCounter( clientNumber, rtt,
         receivedPdu.getServerTime() );
 
     log.debug( receivedPdu.getClientThreadName() + ": RTT fuer Request "
-        + ( i + 1 ) + ": " + rtt + " ns" );
+        + ( receivedPdu.getMessageNumber() + 1 ) + ": " + rtt + " ns" );
     log.debug( receivedPdu.getClientThreadName()
         + ": Echo-Nachricht empfangen von  "
         + receivedPdu.getServerThreadName() + ":" + receivedPdu.getMessage() );
     log.debug( Thread.currentThread().getName() + "Benoetigte Serverzeit: "
         + receivedPdu.getServerTime() );
+  }
+
+  @Override
+  public void onException( JMSException e )
+  {
+    log.debug( "CONNECTION EXCEPTION: " + e.getMessage() );
   }
 }

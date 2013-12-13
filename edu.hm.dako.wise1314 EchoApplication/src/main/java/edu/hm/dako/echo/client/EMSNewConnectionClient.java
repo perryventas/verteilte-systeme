@@ -68,7 +68,8 @@ public class EMSNewConnectionClient extends AbstractClient
       connection = connectionFactory.connectToServer( remoteServerAddress,
           serverPort, localPort );
       connection.send( pdu );
-      log.debug("Sent message, " + pdu.getClientThreadName() + ", Message# " + (i+1));
+      log.debug( "Sent request, " + pdu.getClientThreadName() + ", Request# "
+          + ( i + 1 ) );
       Thread.sleep( clientThinkTime );
     }
     catch ( Exception e )

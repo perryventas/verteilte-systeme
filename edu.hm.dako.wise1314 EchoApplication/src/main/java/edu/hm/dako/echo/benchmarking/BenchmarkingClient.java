@@ -106,7 +106,9 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     if ( emsQueue != null )
     {
       // wait until we got all messages
-      while ( !sharedData.allMessagesReceived() );
+      while ( !sharedData.allMessagesReceived() )
+        ;
+      emsQueue.shutdown();
     }
     executorService.shutdown();
 
