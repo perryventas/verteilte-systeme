@@ -140,6 +140,7 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
     clientGui.setMessageLine( "Alle Clients-Threads beendet" );
 
     UserInterfaceResultData resultData = getResultData( parm, startTime );
+    clientGui.showResultData( resultData );
 
     clientGui.setMessageLine( parm.mapImplementationTypeToString( parm
         .getImplementationType() ) + ": Benchmark beendet" );
