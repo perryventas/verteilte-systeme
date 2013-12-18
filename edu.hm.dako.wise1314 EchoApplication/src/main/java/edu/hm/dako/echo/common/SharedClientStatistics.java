@@ -56,6 +56,7 @@ public class SharedClientStatistics
     long sumServerTime; // Zeit, die der Server insgesamt fuer alle Requests
                         // benoetigt in ns
     long maxHeapSize; // Maximale Heap-Groesse in Bytes waehrend eines Testlaufs
+    String error; // Fehler
     int numberOfErrors; // Summe der Fehler
   }
 
@@ -102,6 +103,7 @@ public class SharedClientStatistics
       clientStatistics[ i ].sumRTT = 0;
       clientStatistics[ i ].sumServerTime = 0;
       clientStatistics[ i ].maxHeapSize = 0;
+      clientStatistics[ i ].error = null;
       clientStatistics[ i ].numberOfErrors = 0;
     }
   }
@@ -726,11 +728,45 @@ public class SharedClientStatistics
   }
 
   /**
-   * Fehler ermitteln
+   * Fehleranzahl ermitteln
    * 
    * @return number of errors
    */
   public int getErrorNumber()
+  {
+    int sum = 0;
+
+    for ( int i = 0; i < numberOfClients; i++ )
+    {
+      if( clientStatistics[ i ].error != null )
+        sum++;
+    }
+    return sum;
+  }
+  
+  /**
+   * Fehler pro ClientID melden
+   * 
+   * @return first and last error depends on client id
+   */
+  public String getErrors()
+  {
+    String errors = "";
+    
+    for ( int i = 0; i < numberOfClients; i++ )
+    {
+      if( clientStatistics[ i ].error != null )
+        errors += "\n" + clientStatistics[ i ].error;
+    }
+    return errors;
+  }
+  
+  /**
+   * Anzahl insgesamter Fehler ermitteln
+   * 
+   * @return number of errors
+   */
+  public int getErrorNumbers()
   {
     int sum = 0;
 
@@ -748,10 +784,11 @@ public class SharedClientStatistics
    *          Client-Id
    * 
    */
-  public synchronized void setErrorNumber( int i )
+  public synchronized void setErrorNumber( int i, String error )
   {
     if ( !inRange( i ) )
       return;
+    clientStatistics[ i ].error = error;
     clientStatistics[ i ].numberOfErrors++;
   }
 }
