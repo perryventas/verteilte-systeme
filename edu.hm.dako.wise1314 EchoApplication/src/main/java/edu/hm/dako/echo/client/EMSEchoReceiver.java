@@ -92,11 +92,11 @@ public class EMSEchoReceiver implements ExceptionListener, MessageListener
 
       ObjectMessage objMsg = (ObjectMessage) msg;
       EchoPDU receivedPdu = (EchoPDU) objMsg.getObject();
+      
+      long rtt = System.nanoTime() - receivedPdu.getClientTime();
 
       log.debug( "Received message, " + receivedPdu.getClientThreadName()
           + ", Message# " + +( receivedPdu.getMessageNumber() + 1 ) );
-
-      long rtt = System.nanoTime() - receivedPdu.getClientTime();
 
       // "Client-Thread-" + clientNumber
       int clientNumber = Integer.parseInt( receivedPdu.getClientThreadName()

@@ -63,10 +63,10 @@ public class EMSNewConnectionClient extends AbstractClient
     try
     {
       sharedData.incrSentMsgCounter( clientNumber );
-      EchoPDU pdu = constructEchoPDU( i );
-      pdu.setMessageNumber( i );
       connection = connectionFactory.connectToServer( remoteServerAddress,
           serverPort, localPort );
+      EchoPDU pdu = constructEchoPDU( i );
+      pdu.setMessageNumber( i );
       connection.send( pdu );
       log.debug( "Sent request, " + pdu.getClientThreadName() + ", Request# "
           + ( i + 1 ) );
