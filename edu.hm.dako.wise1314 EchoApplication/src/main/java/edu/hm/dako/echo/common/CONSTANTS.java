@@ -22,7 +22,7 @@ public class CONSTANTS
   public static final String TRACE_SERVER_URL = "http://localhost:8882";
 
   public static final String DB_USER_NAME = "root";
-  public static final String DB_PASSWORD = "zwetschgenmandl";
+  public static final String DB_PASSWORD = "vsys";
 
   public static final String DB_NAME = "tibco";
   public static final String COUNT_TABLE_NAME = "count";
