@@ -6,6 +6,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
 
 import edu.hm.dako.echo.common.EchoPDU;
@@ -18,6 +20,8 @@ import edu.hm.dako.echo.common.EchoPDU;
 public class RestInterface
 {
 
+  private static Log log = LogFactory.getLog( RestInterface.class );  
+	
   public enum RESULT
   {
     OK, ERROR
@@ -47,7 +51,14 @@ public class RestInterface
 
       BufferedReader reader = new BufferedReader( new InputStreamReader(
           connection.getInputStream() ) );
-
+      
+      String response = reader.readLine();
+      /* An error occurred. Add the error to the PDU. */
+      if ( ! response.equals( "OK" ) )
+      {
+        receivedPdu.setErrorMessage( response );
+        log.info( "Error " + response );
+      }
       writer.close();
       reader.close();
 

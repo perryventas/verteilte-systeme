@@ -8,8 +8,8 @@
         <loginTimeout/>
         <connectionType>JDBC</connectionType>
         <UseSharedJndiConfig>false</UseSharedJndiConfig>
-        <location>jdbc:mysql://5.9.75.108:3306/tibco</location>
+        <location>jdbc:mysql://127.0.0.1:3306/tibco</location>
         <user>root</user>
-        <password>#!M0Nzd3f5Z7op6dtTC2bMiOj02yLQ7CeC+ENGeX3XhVAobwNmotWfyg==</password>
+        <password>#!bwnVpXf5cPJBH79yqhwfiiG2/pcZ+UAh</password>
     </config>
 </BWSharedResource>

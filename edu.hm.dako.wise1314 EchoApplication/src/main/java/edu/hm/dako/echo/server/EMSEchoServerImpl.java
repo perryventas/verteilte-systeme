@@ -65,7 +65,6 @@ public class EMSEchoServerImpl implements EchoServer, MessageListener
 
   private Boolean connectToEms()
   {
-
     String serverUrl = CONSTANTS.SERVER_URL;
 
     TibjmsQueueConnectionFactory queueFactory = new TibjmsQueueConnectionFactory(

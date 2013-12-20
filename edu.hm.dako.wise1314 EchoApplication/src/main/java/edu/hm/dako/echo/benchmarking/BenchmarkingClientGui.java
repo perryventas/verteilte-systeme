@@ -207,7 +207,7 @@ public class BenchmarkingClientGui extends JPanel implements
     text5.setText( "100" );
     panel.add( new JLabel( "Server-IP-Adresse" ), cc.xy( 1, 9 ) );
     panel.add( text6, cc.xy( 3, 9 ) );
-    text6.setText( "10.28.55.152" );
+    text6.setText( "moguai.org" );
     panel.add( new JLabel( "Nachrichtenlaenge [Byte]" ), cc.xy( 5, 9 ) );
     panel.add( text7, cc.xy( 7, 9 ) );
     text7.setText( "50" );
@@ -385,7 +385,7 @@ public class BenchmarkingClientGui extends JPanel implements
     text3.setText( "50" ); // Anzahl Nachrichten je Client
     text4.setText( "7222" ); // Serverport;
     text5.setText( "100" ); // Denkzeit
-    text6.setText( "10.28.55.152" ); // IP-Adresse des Servers
+    text6.setText( "moguai.org" ); // IP-Adresse des Servers
     text7.setText( "50" ); // Nachrichtenlaenge in Byte
     text8.setText( "" );
     text9.setText( "" );

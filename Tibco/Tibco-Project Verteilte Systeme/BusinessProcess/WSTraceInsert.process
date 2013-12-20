@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/Schemas/Schema_data.xsd">
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/pe/EngineTypes" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://schemas.tibco.com/bw/plugins/xml/5.0/RESTJSONExceptions" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:ns3="http://schemas.tibco.com/bw/plugins/jdbc/5.0/jdbcExceptions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pfx3="http://www.tibco.com/ns/no_namespace_schema_location/Schemas/Schema_data.xsd">
     <xsd:import namespace="http://www.tibco.com/ns/no_namespace_schema_location/Schemas/Schema_data.xsd" schemaLocation="/Schemas/Schema_data.xsd"/>
     <pd:name>BusinessProcess/WSTraceInsert.process</pd:name>
     <pd:startName>HTTP Receiver</pd:startName>
@@ -9,8 +9,8 @@
     <pd:starter name="HTTP Receiver">
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
-        <pd:x>71</pd:x>
-        <pd:y>50</pd:y>
+        <pd:x>62</pd:x>
+        <pd:y>159</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>UTF8</defaultEncoding>
@@ -39,16 +39,26 @@
         <pd:inputBindings/>
     </pd:starter>
     <pd:endName>End</pd:endName>
-    <pd:endX>702</pd:endX>
-    <pd:endY>56</pd:endY>
+    <pd:endX>913</pd:endX>
+    <pd:endY>183</pd:endY>
     <pd:errorSchemas/>
-    <pd:processVariables/>
+    <pd:processVariables>
+        <Error>
+            <xsd:element name="Error">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="msg" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </Error>
+    </pd:processVariables>
     <pd:targetNamespace>http://xmlns.example.com/1384530035702</pd:targetNamespace>
     <pd:activity name="Send HTTP Response">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>538</pd:x>
-        <pd:y>56</pd:y>
+        <pd:x>672</pd:x>
+        <pd:y>57</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -69,7 +79,7 @@
         <pd:inputBindings>
             <ResponseActivityInput>
                 <asciiContent>
-                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
+                    <xsl:value-of select="&quot;OK&quot;"/>
                 </asciiContent>
                 <DynamicHeaders>
                     <Header>
@@ -87,19 +97,19 @@
     <pd:activity name="Parse JSON">
         <pd:type>com.tibco.plugin.json.activities.JSONParserActivity</pd:type>
         <pd:resourceType>ae.activities.JSONParserActivity</pd:resourceType>
-        <pd:x>202</pd:x>
-        <pd:y>51</pd:y>
+        <pd:x>164</pd:x>
+        <pd:y>73</pd:y>
         <config>
             <SchemaType>xsdType</SchemaType>
             <BadgerfishCheck>false</BadgerfishCheck>
             <ActivityOutputEditor ref="pfx3:data"/>
         </config>
         <pd:inputBindings>
-            <ns1:ActivityInputClass xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/json">
+            <ns:ActivityInputClass>
                 <jsonString>
-                    <xsl:value-of xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
+                    <xsl:value-of select="$HTTP-Receiver/ProcessStarterOutput/PostData"/>
                 </jsonString>
-            </ns1:ActivityInputClass>
+            </ns:ActivityInputClass>
         </pd:inputBindings>
     </pd:activity>
     <pd:activity name="TRACE INSERT">
@@ -154,6 +164,110 @@ VALUES
             </xsl:for-each>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="Assign">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>213</pd:x>
+        <pd:y>365</pd:y>
+        <config>
+            <variableName>Error</variableName>
+        </config>
+        <pd:inputBindings>
+            <Error>
+                <msg>
+                    <xsl:value-of select="$_error/ns2:ErrorReport/Msg"/>
+                </msg>
+            </Error>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Null">
+        <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
+        <pd:resourceType>ae.activities.null</pd:resourceType>
+        <pd:x>391</pd:x>
+        <pd:y>373</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Send-HTTP-Response-1">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>814</pd:x>
+        <pd:y>345</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HTTP Receiver</eventSource>
+            <flushResponse>true</flushResponse>
+            <Headers>
+                <xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="root">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xs:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="$Error/Error/msg"/>
+                </asciiContent>
+                <DynamicHeaders/>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Assign-1">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>295</pd:x>
+        <pd:y>206</pd:y>
+        <config>
+            <variableName>Error</variableName>
+        </config>
+        <pd:inputBindings>
+            <Error>
+                <msg>
+                    <xsl:value-of select="$_error_Parse-JSON/ActivityErrors/ns1:JSONParseException/msg"/>
+                </msg>
+            </Error>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Null-1">
+        <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
+        <pd:resourceType>ae.activities.null</pd:resourceType>
+        <pd:x>532</pd:x>
+        <pd:y>272</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Assign-2">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>478</pd:x>
+        <pd:y>131</pd:y>
+        <config>
+            <variableName>Error</variableName>
+        </config>
+        <pd:inputBindings>
+            <Error>
+                <msg>
+                    <xsl:value-of select="$_error_TRACE-INSERT/ActivityErrors/ns3:JDBCSQLException/msg"/>
+                </msg>
+            </Error>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Null-2">
+        <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
+        <pd:resourceType>ae.activities.null</pd:resourceType>
+        <pd:x>622</pd:x>
+        <pd:y>189</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
     <pd:transition>
         <pd:from>HTTP Receiver</pd:from>
         <pd:to>Parse JSON</pd:to>
@@ -178,6 +292,76 @@ VALUES
     <pd:transition>
         <pd:from>TRACE INSERT</pd:from>
         <pd:to>Send HTTP Response</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Null</pd:from>
+        <pd:to>Send-HTTP-Response-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign</pd:from>
+        <pd:to>Null</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HTTP Receiver</pd:from>
+        <pd:to>Assign</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-52429</pd:lineColor>
+        <pd:conditionType>error</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse JSON</pd:from>
+        <pd:to>Assign-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-52429</pd:lineColor>
+        <pd:conditionType>error</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign-1</pd:from>
+        <pd:to>Null-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Null-1</pd:from>
+        <pd:to>Send-HTTP-Response-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Send-HTTP-Response-1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>TRACE INSERT</pd:from>
+        <pd:to>Assign-2</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-52429</pd:lineColor>
+        <pd:conditionType>error</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Assign-2</pd:from>
+        <pd:to>Null-2</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Null-2</pd:from>
+        <pd:to>Send-HTTP-Response-1</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>

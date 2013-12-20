@@ -160,20 +160,12 @@ public class BenchmarkingClient implements BenchmarkingStartInterface
 
   private String getErrorResult()
   {
-    boolean err = sharedData.getErrorNumber() != 0;
-    
     String error = "DTC meldet: ";
-    if ( !err )
-      error += "Keine ";
-
-    error += "Fehler entdeckt! ";
-    
-    if ( err ) {
-      error += sharedData.getErrorNumber() + " Clients und " + sharedData.getErrorNumbers() + " Nachrichten sind davon betroffen!  Fehler:";
-      error += sharedData.getErrors();
-    }
-    
-    return error;
+    if ( sharedData.getErrorNumber() == 0 )
+      error += "Keine";
+    else
+      error += sharedData.getErrorNumber();
+    return error + " Fehler entdeckt!";
   }
 
   private UserInterfaceResultData getResultData(

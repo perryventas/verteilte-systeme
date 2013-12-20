@@ -11,7 +11,7 @@
         <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
         <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
         <pd:x>55</pd:x>
-        <pd:y>209</pd:y>
+        <pd:y>210</pd:y>
         <config>
             <outputMode>String</outputMode>
             <defaultEncoding>UTF8</defaultEncoding>
@@ -58,8 +58,8 @@
     <pd:activity name="Send HTTP Response">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>767</pd:x>
-        <pd:y>43</pd:y>
+        <pd:x>636</pd:x>
+        <pd:y>35</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -128,8 +128,8 @@ VALUES
     <pd:activity name="Assign">
         <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
         <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
-        <pd:x>188</pd:x>
-        <pd:y>381</pd:y>
+        <pd:x>196</pd:x>
+        <pd:y>371</pd:y>
         <config>
             <variableName>Error</variableName>
         </config>
@@ -144,16 +144,16 @@ VALUES
     <pd:activity name="Null">
         <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
         <pd:resourceType>ae.activities.null</pd:resourceType>
-        <pd:x>410</pd:x>
-        <pd:y>384</pd:y>
+        <pd:x>421</pd:x>
+        <pd:y>377</pd:y>
         <config/>
         <pd:inputBindings/>
     </pd:activity>
     <pd:activity name="Send-HTTP-Response-1">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>645</pd:x>
-        <pd:y>299</pd:y>
+        <pd:x>606</pd:x>
+        <pd:y>320</pd:y>
         <config>
             <closeConnection>true</closeConnection>
             <eventSource>HTTP Receiver</eventSource>
@@ -184,8 +184,8 @@ VALUES
     <pd:activity name="Assign-1">
         <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
         <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
-        <pd:x>198</pd:x>
-        <pd:y>289</pd:y>
+        <pd:x>253</pd:x>
+        <pd:y>213</pd:y>
         <config>
             <variableName>Error</variableName>
         </config>
@@ -200,15 +200,15 @@ VALUES
     <pd:activity name="Null-1">
         <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
         <pd:resourceType>ae.activities.null</pd:resourceType>
-        <pd:x>410</pd:x>
-        <pd:y>274</pd:y>
+        <pd:x>422</pd:x>
+        <pd:y>261</pd:y>
         <config/>
         <pd:inputBindings/>
     </pd:activity>
     <pd:activity name="Assign-2">
         <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
         <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
-        <pd:x>417</pd:x>
+        <pd:x>428</pd:x>
         <pd:y>153</pd:y>
         <config>
             <variableName>Error</variableName>
@@ -224,15 +224,15 @@ VALUES
     <pd:activity name="Null-2">
         <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
         <pd:resourceType>ae.activities.null</pd:resourceType>
-        <pd:x>557</pd:x>
-        <pd:y>152</pd:y>
+        <pd:x>577</pd:x>
+        <pd:y>155</pd:y>
         <config/>
         <pd:inputBindings/>
     </pd:activity>
     <pd:activity name="Send-HTTP-Response-2">
         <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
         <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
-        <pd:x>742</pd:x>
+        <pd:x>743</pd:x>
         <pd:y>160</pd:y>
         <config>
             <closeConnection>true</closeConnection>

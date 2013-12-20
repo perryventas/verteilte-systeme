@@ -6,7 +6,7 @@
         <NamingEnvironment>
             <UseJNDI>true</UseJNDI>
             <ProviderURL>tcp://localhost:7222</ProviderURL>
-            <NamingURL>tibjmsnaming://moguai.org:7222</NamingURL>
+            <NamingURL>tibjmsnaming://127.0.0.1:7222</NamingURL>
             <NamingInitialContextFactory>com.tibco.tibjms.naming.TibjmsInitialContextFactory</NamingInitialContextFactory>
             <TopicFactoryName>TopicConnectionFactory</TopicFactoryName>
             <QueueFactoryName>QueueConnectionFactory</QueueFactoryName>

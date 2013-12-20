@@ -8,8 +8,7 @@ package go;
 public class CONSTANTS {
 
 	// DB
-	public static final String DB_HOST = "10.28.55.152";
-	//public static final String DB_HOST = "5.9.75.108";
+	public static final String DB_HOST = "127.0.0.1";
 	public static final String WS_AS_HOST = "http://localhost:40797/";
 
 	public static final String DB_USER_NAME = "root";
